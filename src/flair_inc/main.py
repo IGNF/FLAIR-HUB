@@ -17,7 +17,7 @@ from flair_inc.utils.utils_tasks import get_data_module, get_segmentation_module
 from flair_inc.utils.utils_data import get_paths, get_sentinel_dates_mtd
 from flair_inc.utils.utils import setup_environment, Logger, copy_csv_and_config, print_recap
 
-
+from codecarbon import OfflineEmissionsTracker
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("--conf", help="Path to the .yaml config file", required=True)
@@ -187,6 +187,16 @@ def main():
     args = argParser.parse_args()
     config, out_dir = setup_environment(args)
 
+    if config['codecarbon']:
+
+        tracker = OfflineEmissionsTracker(output_dir=out_dir, 
+                                project_name='flair-inc | codecarbon',
+                                log_level="error",
+                                country_iso_code='FRA'
+
+        )
+        tracker.start()
+
     # Custom Logger for console/logfile output
     sys.stdout = Logger(
         Path(config['paths']["out_folder"], config['paths']["out_model_name"], 'flair-compute.log').as_posix())
@@ -215,6 +225,19 @@ def main():
         out_dir_predict = Path(out_dir, 'results_'+config['paths']["out_model_name"])
         out_dir_predict.mkdir(parents=True, exist_ok=True)
         predict_stage(config, dm, out_dir_predict, trained_state_dict)
+
+
+    if config['codecarbon']:
+
+        tracker.stop()
+
+        print("\n----- Emissions Tracking Summary -----")
+        print(f"Total CO2 emissions: {tracker.final_emissions} kg CO2e")
+        print(f"Total energy consumption: {tracker._total_energy} kWh")
+        print(f"Total energy cpu: {tracker._total_cpu_energy} kWh")        
+        print(f"Total energy gpu: {tracker._total_gpu_energy} kWh")
+        print(f"Total energy ram: {tracker._total_ram_energy} kWh")
+        print(f"Measures done : {tracker._measure_occurrence}.")
 
 
 if __name__ == "__main__":
