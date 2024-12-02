@@ -1,0 +1,119 @@
+paths :   
+    out_folder: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/results/'
+    out_model_name: 'TRYOUTS'
+    train_csv: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/split_csv/toy/TRAIN_FLAIR-INC_TOY.csv'
+    val_csv: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/split_csv/toy/VALID_FLAIR-INC_TOY.csv'
+    test_csv: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/split_csv/toy/TEST_FLAIR-INC_TOY.csv'
+    global_mtd_folder: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/FLAIR-INC_TOY/GLOBAL_ALL_MTD/'
+    ckpt_model_path: ''
+    path_metadata_aerial: '../flair_aerial_metadata.json'
+
+tasks: 
+    train: True
+    train_tasks: 
+        init_weights_only_from_ckpt: False
+        resume_training_from_ckpt: False
+    predict: True
+    write_files: True
+
+modalities:
+    inputs:
+        AERIAL_RGBI      : True
+        AERIAL-RLT_PAN   : False
+        DEM_ELEV         : True
+        SPOT_RGBI        : True
+        SENTINEL1-ASC_TS : True
+        SENTINEL1-DESC_TS: True
+        SENTINEL2_TS     : True         
+
+    labels : 'AERIAL_LABEL-COSIA'
+
+    inputs_channels:
+        aerial    : [1,2,3,4]
+        spot      : [1,2,3]
+        sentinel2 : [1,2,3,4,5,6,7,8,9,10]
+        sentinel1 : [1,2] 
+
+    filter_sentinel2: True 
+    temporal_average_sentinel2 : False  # False, monthly, semi-monthly
+    temporal_average_sentinel1 : False
+
+    use_augmentation: False
+    use_metadata: False   
+
+    normalization: 
+        norm_type : custom
+        aerial_means : [105.08, 110.87, 101.82, 50]
+        aerial_stds  : [105.08, 110.87, 101.82, 50]
+
+
+models:
+    
+    monotemp_model: 
+        arch: 'smp_resnet34-unet' #'hf_openmmlab/upernet-swin-small'  
+        leading_modality: 'AERIAL_RGBI'
+        new_channels_init_mode: 'third'
+
+    multitemp_model: 
+        ref_date: '05-15' # defined for whole dataset    
+        input_dim: 10  
+        encoder_widths: [64, 64, 64, 128] # 1st and last must be equivalent to decoder_widths
+        decoder_widths: [32, 32, 64, 128] # 1st and last must be equivalent to encoder_widths
+        out_conv: [32, 20]
+        str_conv_k: 3
+        str_conv_s: 1
+        str_conv_p: 1
+        agg_mode: "att_group"
+        encoder_norm: "group"
+        n_head: 16
+        d_model: 256
+        d_k: 4
+        encoder: False
+        return_maps: True
+        pad_value: 0
+        padding_mode: "reflect"
+
+    fusion_operation: 'add'
+
+classes: 
+    1: [1, 'building']
+    2: [1, 'pervious surface']
+    3: [1, 'impervious surface']
+    4: [1, 'bare soil']
+    5: [1, 'water']
+    6: [1, 'coniferous']
+    7: [1, 'deciduous']
+    8: [1, 'brushwood']
+    9: [1, 'vineyard']
+    10: [1, 'herbaceous vegetation']
+    11: [1, 'agricultural land']
+    12: [1, 'plowed land']
+    13: [1, 'swimming_pool']
+    14: [1, 'snow']
+    15: [0, 'clear cut']
+    16: [0, 'mixed']
+    17: [0, 'ligneous']
+    18: [1, 'greenhouse']
+    19: [0, 'other']
+
+
+seed: 2022
+batch_size: 2
+learning_rate: 0.02
+num_epochs: 1
+use_weights: True
+georeferencing_output: True
+accelerator: 'gpu'
+num_nodes: 1
+gpus_per_node: 1
+strategy: 'auto'
+num_workers: 0
+ckpt_save_also_last: True
+ckpt_verbose: False
+ckpt_weights_only: False
+ckpt_monitor: 'val_loss'
+ckpt_monitor_mode: 'min'
+ckpt_earlystopping_patience: 30
+cp_csv_and_conf_to_output: True
+enable_progress_bar: True
+progress_rate: 10
