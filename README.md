@@ -1,3 +1,15 @@
+# TO-DO 
+- [ ] Add auxiliary losses | manage nb aux losses with SEN keys
+- [ ] Add normalization for all modalities : config + dataloader
+- [ ] Check labels starting at 0/1
+- [ ] MNT/MNS : allow pass the two bands and not calc elev
+- [ ] Add auxiliary head (stage 3 SWIN) to monotemp ?
+- [ ] Modify reshape_to_labels and MetadataMLP to extract self.list_x.shape[-2:]
+- [ ] Check alignement spatial dimensions aerial RLT
+- [ ] If multitemp only, verify base_shape
+
+
+
 <div align="center">
   
 # FLAIR-INC
