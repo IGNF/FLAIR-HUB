@@ -1,4 +1,5 @@
 # TO-DO 
+- [x] Add codecarbon measures
 - [ ] Add auxiliary losses | manage nb aux losses with SEN keys
 - [ ] Add normalization for all modalities : config + dataloader
 - [ ] Check labels starting at 0/1
