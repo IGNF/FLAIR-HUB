@@ -105,8 +105,7 @@ flair_data = {
 
 ## Pre-trained models
 
-<b>Pre-trained models &#9889;&#9889;&#9889;</b> with different modalities and architectures are available as a IGNF's HuggingFace collection here : <a href="https://huggingface.co/collections/IGNF/flair-models-landcover-semantic-segmentation-65bb67415a5dbabc819a95de">huggingface.co/collections/IGNF/flair-models-landcover-semantic-segmentation</a> <br>
-See datacards for more details about each model. 
+<b>Pre-trained models &#9889;&#9889;&#9889;</b>  
 
 <br>
 
