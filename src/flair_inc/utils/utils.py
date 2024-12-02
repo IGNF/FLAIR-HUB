@@ -1,8 +1,10 @@
 import yaml
 import sys
 import shutil
+import pandas as pd
 
 from pathlib import Path
+from typing import Union
 from pytorch_lightning.utilities.rank_zero import rank_zero_only  
 
 
@@ -88,5 +90,30 @@ def print_recap(config: dict, dict_train=None, dict_val=None, dict_test=None) ->
                 print(f"- {key:20s}: {'':3s}{len(dict_test[key])} samples")
 
 
+@rank_zero_only
+def emission_tracking_summary(out_dir: Union[str, Path]) -> None:
+    """
+    Summarizes the emissions data by aggregating logs from all nodes.
+    Args:
+        out_dir (Union[str, Path]): Path to the output directory where emissions logs are stored.
+    Returns:
+        None
+    """
+
+    emission_logs_dir = Path(out_dir)
+    emission_files = emission_logs_dir.glob("node_*/emissions.csv")
+
+    # Load and combine all logs into a single DataFrame
+    dfs = [pd.read_csv(file) for file in emission_files]
+    aggregated = pd.concat(dfs).sum(numeric_only=True)
+
+    # Print the aggregated emissions summary
+    print("----- Total Emissions Summary -----")
+    print(f"Total CO2 emissions: {aggregated['emissions']:.6f} kg CO2e")
+    print(f"Total energy consumption: {aggregated['energy_consumed']:.6f} kWh")
+    print(f"Total energy CPU: {aggregated['cpu_energy']:.6f} kWh")
+    print(f"Total energy GPU: {aggregated['gpu_energy']:.6f} kWh")
+    print(f"Total energy RAM: {aggregated['ram_energy']:.6f} kWh")
+    print(f"Measures done: {aggregated['energy_consumed']:.6f}")
 
 
