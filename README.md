@@ -4,6 +4,7 @@
 - [ ] Add normalization for all modalities : config + dataloader
 - [ ] Check labels starting at 0/1
 - [ ] MNT/MNS : allow pass the two bands and not calc elev
+- [ ] MNT/MNS : check if the 0/1 normalisation works
 - [ ] Add auxiliary head (stage 3 SWIN) to monotemp ?
 - [ ] Modify reshape_to_labels and MetadataMLP to extract self.list_x.shape[-2:]
 - [ ] Check alignement spatial dimensions aerial RLT
