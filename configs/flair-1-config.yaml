@@ -1,3 +1,5 @@
+codecarbon: True
+
 paths :   
     out_folder: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/results/'
     out_model_name: 'TRYOUTS'
