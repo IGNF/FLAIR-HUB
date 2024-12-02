@@ -7,6 +7,7 @@
 - [ ] Modify reshape_to_labels and MetadataMLP to extract self.list_x.shape[-2:]
 - [ ] Check alignement spatial dimensions aerial RLT
 - [ ] If multitemp only, verify base_shape
+- [ ] Test LPIS labels
 
 
 
