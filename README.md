@@ -20,16 +20,14 @@ Participate in obtaining more accurate maps for a more comprehensive description
 
 <div style="border-width:1px; border-style:solid; border-color:#d2db8c; padding-left: 1em; padding-right: 1em; ">
   
-<h2 style="margin-top:5px;">Links</h2>
+<h2 style="margin-top:5px;">Quicklinks</h2>
 
 
-- **Datapaper :** https://arxiv.org/pdf/2211.12979.pdf
+- **Datapaper :** 
 
-- **Dataset links :** https://ignf.github.io/FLAIR/ or https://huggingface.co/datasets/IGNF/FLAIR
+- **Dataset links :** 
 
-- **Pre-trained models :** https://huggingface.co/collections/IGNF/flair-models-landcover-semantic-segmentation-65bb67415a5dbabc819a95de
-
-- **Challenge page :**  https://codalab.lisn.upsaclay.fr/competitions/8769 [🛑 closed!]
+- **Pre-trained models :** 
 
 </div>
 
