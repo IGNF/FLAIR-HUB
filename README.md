@@ -9,6 +9,7 @@
 - [ ] Check alignement spatial dimensions aerial RLT
 - [ ] If multitemp only, verify base_shape
 - [ ] Test LPIS labels
+- [ ] Add to config : filtering values S2
 
 
 
