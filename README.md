@@ -20,7 +20,7 @@ Participate in obtaining more accurate maps for a more comprehensive description
 
 <div style="border-width:1px; border-style:solid; border-color:#d2db8c; padding-left: 1em; padding-right: 1em; ">
   
-<h2 style="margin-top:5px;">Quicklinks</h2>
+<h2 style="margin-top:5px;">:mag_right:Quicklinks</h2>
 
 
 - **Datapaper :** 
@@ -34,10 +34,9 @@ Participate in obtaining more accurate maps for a more comprehensive description
 
 ## Context & Data
 
-The FLAIR #1 dataset is sampled countrywide and is composed of over 20 billion annotated pixels, acquired over three years and different months (spatio-temporal domains). The dataset is available to download <a href="https://ignf.github.io/FLAIR/">here.</a> It consists of 512 x 512 patches with 13 (baselines) or 19 (full) semantic classes (see associated datapaper). Each patch has 5 channels (RVB-Infrared-Elevation). 
-
 <br>
 
+<!--
 <figure>
   <img
   src="images/flair-1_spatiotemporal.png"
@@ -54,6 +53,7 @@ The FLAIR #1 dataset is sampled countrywide and is composed of over 20 billion a
   <br>
   <em>Example of input data (first three columns) and corresponding supervision masks (last column).</em>
 </p>
+-->
 
 ```
 flair_data = {
@@ -83,22 +83,7 @@ flair_data = {
 <br>
 
 
-## Baseline model 
-
-A U-Net architecture with a pre-trained ResNet34 encoder from the pytorch segmentation models library is used for the baselines. The used architecture allows integration of patch-wise metadata information and employs commonly used image data augmentation techniques. It has about 24.4M parameters and it is implemented using the _segmentation-models-pytorch_ library. The results are evaluated with an Intersection Over Union (IoU) metric and a single mIoU is reported (see associated datapaper).
-
-The _metadata_ strategy refers encoding metadata with a shallow MLP and concatenate this encoded information to the U-Net encoder output. The _augmentation_ strategy employs three typical geometrical augmentations (see associated datapaper).
-
-
-Example of a semantic segmentation of an urban and coastal area in the D076 spatial
-domain, obtained with the baseline trained model:
-
-
-<p align="center">
-  <img width="100%" src="images/flair-1_predicted.png">
-  <br>
-  <em>Example of a semantic segmentation result using the baseline model.</em>
-</p>
+## Baseline models
 
 
 <br>
