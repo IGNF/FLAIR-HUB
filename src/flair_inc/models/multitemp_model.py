@@ -1,41 +1,139 @@
+"""
+Based on U-TAE Implementation
+Author: Vivien Sainte Fare Garnot (github/VSainteuf)
+License: MIT
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn
 import copy
 
-from torch.nn import functional as F
 from typing import Dict, Any
 
 
 
-class PositionalEncoder(nn.Module):
-    def __init__(self, d, T=1000, repeat=None, offset=0):
-        super(PositionalEncoder, self).__init__()
-        self.d = d
-        self.T = T
-        self.repeat = repeat
-        self.denom = torch.pow(
-            T, 2 * torch.div(torch.arange(offset, offset + d).float(), 2, rounding_mode='floor') / d
+class UTAE(nn.Module):
+    def __init__(self, config: Dict[str, Any], input_dim: int = 10, return_maps=False):
+        """
+        U-TAE architecture for spatio-temporal encoding of satellite image time series.
+        Args:
+            config (dict): Configuration dictionary containing all necessary parameters.
+        """
+        super(UTAE, self).__init__()
+
+        self.input_dim = input_dim
+        self.encoder_widths = config['models']['multitemp_model']["encoder_widths"]
+        self.decoder_widths = config['models']['multitemp_model']["decoder_widths"]
+        self.out_conv = config['models']['multitemp_model']["out_conv"]
+        self.str_conv_k = config['models']['multitemp_model']["str_conv_k"]
+        self.str_conv_s = config['models']['multitemp_model']["str_conv_s"]
+        self.str_conv_p = config['models']['multitemp_model']["str_conv_p"]
+        self.agg_mode = config['models']['multitemp_model']["agg_mode"]
+        self.encoder_norm = config['models']['multitemp_model']["encoder_norm"]
+        self.n_head = config['models']['multitemp_model']["n_head"]
+        self.d_model = config['models']['multitemp_model']["d_model"]
+        self.d_k = config['models']['multitemp_model']["d_k"]
+        self.encoder = config['models']['multitemp_model']['encoder']
+        self.return_maps = return_maps
+        self.pad_value = config['models']['multitemp_model']["pad_value"]
+        self.padding_mode = config['models']['multitemp_model']["padding_mode"]
+
+        self.n_stages = len(self.encoder_widths)
+        self.enc_dim = self.decoder_widths[0] if self.decoder_widths is not None else self.encoder_widths[0]
+        self.stack_dim = sum(self.decoder_widths) if self.decoder_widths is not None else sum(self.encoder_widths)
+
+        if self.encoder:
+            self.return_maps = True
+
+        if self.decoder_widths is not None:
+            assert len(self.encoder_widths) == len(self.decoder_widths)
+            assert self.encoder_widths[-1] == self.decoder_widths[-1]
+        else:
+            self.decoder_widths = self.encoder_widths
+
+        self.in_conv = ConvBlock(
+            nkernels=[self.input_dim] + [self.encoder_widths[0], self.encoder_widths[0]],
+            pad_value=self.pad_value,
+            norm=self.encoder_norm,
+            padding_mode=self.padding_mode,
         )
-        self.updated_location = False
-
-    def forward(self, batch_positions):
-        if not self.updated_location:
-            self.denom = self.denom.to(batch_positions.device)
-            self.updated_location = True
-        sinusoid_table = (
-            batch_positions[:, :, None] / self.denom[None, None, :]
-        )  # B x T x C
-        sinusoid_table[:, :, 0::2] = torch.sin(sinusoid_table[:, :, 0::2])  # dim 2i
-        sinusoid_table[:, :, 1::2] = torch.cos(sinusoid_table[:, :, 1::2])  # dim 2i+1
-
-        if self.repeat is not None:
-            sinusoid_table = torch.cat(
-                [sinusoid_table for _ in range(self.repeat)], dim=-1
+        self.down_blocks = nn.ModuleList(
+            DownConvBlock(
+                d_in=self.encoder_widths[i],
+                d_out=self.encoder_widths[i + 1],
+                k=self.str_conv_k,
+                s=self.str_conv_s,
+                p=self.str_conv_p,
+                pad_value=self.pad_value,
+                norm=self.encoder_norm,
+                padding_mode=self.padding_mode,
             )
+            for i in range(self.n_stages - 1)
+        )
+        self.up_blocks = nn.ModuleList(
+            UpConvBlock(
+                d_in=self.decoder_widths[i],
+                d_out=self.decoder_widths[i - 1],
+                d_skip=self.encoder_widths[i - 1],
+                k=self.str_conv_k,
+                s=self.str_conv_s,
+                p=self.str_conv_p,
+                norm="batch",
+                padding_mode=self.padding_mode,
+            )
+            for i in range(self.n_stages - 1, 0, -1)
+        )
+        self.temporal_encoder = LTAE2d(
+            in_channels=self.encoder_widths[-1],
+            d_model=self.d_model,
+            n_head=self.n_head,
+            mlp=[self.d_model, self.encoder_widths[-1]],
+            return_att=True,
+            d_k=self.d_k,
+        )
+        self.temporal_aggregator = Temporal_Aggregator(mode=self.agg_mode)
+        self.out_conv = ConvBlock(
+            nkernels=[self.decoder_widths[0]] + self.out_conv,
+            padding_mode=self.padding_mode
+        )
 
-        return sinusoid_table
-    
+    def forward(self, input, batch_positions=None, return_att=False):
+        pad_mask = (
+            (input == self.pad_value).all(dim=-1).all(dim=-1).all(dim=-1)
+        )  # BxT pad mask
+        out = self.in_conv.smart_forward(input)
+        feature_maps = [out]
+        # SPATIAL ENCODER
+        for i in range(self.n_stages - 1):
+            out = self.down_blocks[i].smart_forward(feature_maps[-1])
+            feature_maps.append(out)
+        # TEMPORAL ENCODER
+        out, att = self.temporal_encoder(
+            feature_maps[-1], batch_positions=batch_positions, pad_mask=pad_mask
+        )
+        # SPATIAL DECODER
+        if self.return_maps:
+            maps = [out]
+        for i in range(self.n_stages - 1):
+            skip = self.temporal_aggregator(
+                feature_maps[-(i + 2)], pad_mask=pad_mask, attn_mask=att
+            )
+            out = self.up_blocks[i](out, skip)
+            if self.return_maps:
+                maps.append(out)
+
+        if self.encoder:
+            return out, maps
+        else:
+            out = self.out_conv(out)
+            if return_att:
+                return out, att
+            if self.return_maps:
+                return out, maps
+            else:
+                return out
+
 
 class LTAE2d(nn.Module):
     def __init__(
@@ -160,6 +258,35 @@ class LTAE2d(nn.Module):
             return out
 
 
+class PositionalEncoder(nn.Module):
+    def __init__(self, d, T=1000, repeat=None, offset=0):
+        super(PositionalEncoder, self).__init__()
+        self.d = d
+        self.T = T
+        self.repeat = repeat
+        self.denom = torch.pow(
+            T, 2 * torch.div(torch.arange(offset, offset + d).float(), 2, rounding_mode='floor') / d
+        )
+        self.updated_location = False
+
+    def forward(self, batch_positions):
+        if not self.updated_location:
+            self.denom = self.denom.to(batch_positions.device)
+            self.updated_location = True
+        sinusoid_table = (
+            batch_positions[:, :, None] / self.denom[None, None, :]
+        )  # B x T x C
+        sinusoid_table[:, :, 0::2] = torch.sin(sinusoid_table[:, :, 0::2])  # dim 2i
+        sinusoid_table[:, :, 1::2] = torch.cos(sinusoid_table[:, :, 1::2])  # dim 2i+1
+
+        if self.repeat is not None:
+            sinusoid_table = torch.cat(
+                [sinusoid_table for _ in range(self.repeat)], dim=-1
+            )
+
+        return sinusoid_table
+
+
 class MultiHeadAttention(nn.Module):
     """Multi-Head Attention module
     Modified from github.com/jadore801120/attention-is-all-you-need-pytorch
@@ -247,128 +374,6 @@ class ScaledDotProductAttention(nn.Module):
             return output, attn
         
 
-class UTAE(nn.Module):
-    def __init__(self, config: Dict[str, Any], input_dim: int = 10, return_maps=False):
-        """
-        U-TAE architecture for spatio-temporal encoding of satellite image time series.
-        Args:
-            config (dict): Configuration dictionary containing all necessary parameters.
-        """
-        super(UTAE, self).__init__()
-
-        self.input_dim = input_dim
-        self.encoder_widths = config['models']['multitemp_model']["encoder_widths"]
-        self.decoder_widths = config['models']['multitemp_model']["decoder_widths"]
-        self.out_conv = config['models']['multitemp_model']["out_conv"]
-        self.str_conv_k = config['models']['multitemp_model']["str_conv_k"]
-        self.str_conv_s = config['models']['multitemp_model']["str_conv_s"]
-        self.str_conv_p = config['models']['multitemp_model']["str_conv_p"]
-        self.agg_mode = config['models']['multitemp_model']["agg_mode"]
-        self.encoder_norm = config['models']['multitemp_model']["encoder_norm"]
-        self.n_head = config['models']['multitemp_model']["n_head"]
-        self.d_model = config['models']['multitemp_model']["d_model"]
-        self.d_k = config['models']['multitemp_model']["d_k"]
-        self.encoder = config['models']['multitemp_model']['encoder']
-        self.return_maps = return_maps
-        self.pad_value = config['models']['multitemp_model']["pad_value"]
-        self.padding_mode = config['models']['multitemp_model']["padding_mode"]
-
-        self.n_stages = len(self.encoder_widths)
-        self.enc_dim = self.decoder_widths[0] if self.decoder_widths is not None else self.encoder_widths[0]
-        self.stack_dim = sum(self.decoder_widths) if self.decoder_widths is not None else sum(self.encoder_widths)
-
-        if self.encoder:
-            self.return_maps = True
-
-        if self.decoder_widths is not None:
-            assert len(self.encoder_widths) == len(self.decoder_widths)
-            assert self.encoder_widths[-1] == self.decoder_widths[-1]
-        else:
-            self.decoder_widths = self.encoder_widths
-
-        self.in_conv = ConvBlock(
-            nkernels=[self.input_dim] + [self.encoder_widths[0], self.encoder_widths[0]],
-            pad_value=self.pad_value,
-            norm=self.encoder_norm,
-            padding_mode=self.padding_mode,
-        )
-        self.down_blocks = nn.ModuleList(
-            DownConvBlock(
-                d_in=self.encoder_widths[i],
-                d_out=self.encoder_widths[i + 1],
-                k=self.str_conv_k,
-                s=self.str_conv_s,
-                p=self.str_conv_p,
-                pad_value=self.pad_value,
-                norm=self.encoder_norm,
-                padding_mode=self.padding_mode,
-            )
-            for i in range(self.n_stages - 1)
-        )
-        self.up_blocks = nn.ModuleList(
-            UpConvBlock(
-                d_in=self.decoder_widths[i],
-                d_out=self.decoder_widths[i - 1],
-                d_skip=self.encoder_widths[i - 1],
-                k=self.str_conv_k,
-                s=self.str_conv_s,
-                p=self.str_conv_p,
-                norm="batch",
-                padding_mode=self.padding_mode,
-            )
-            for i in range(self.n_stages - 1, 0, -1)
-        )
-        self.temporal_encoder = LTAE2d(
-            in_channels=self.encoder_widths[-1],
-            d_model=self.d_model,
-            n_head=self.n_head,
-            mlp=[self.d_model, self.encoder_widths[-1]],
-            return_att=True,
-            d_k=self.d_k,
-        )
-        self.temporal_aggregator = Temporal_Aggregator(mode=self.agg_mode)
-        self.out_conv = ConvBlock(
-            nkernels=[self.decoder_widths[0]] + self.out_conv,
-            padding_mode=self.padding_mode
-        )
-
-    def forward(self, input, batch_positions=None, return_att=False):
-        pad_mask = (
-            (input == self.pad_value).all(dim=-1).all(dim=-1).all(dim=-1)
-        )  # BxT pad mask
-        out = self.in_conv.smart_forward(input)
-        feature_maps = [out]
-        # SPATIAL ENCODER
-        for i in range(self.n_stages - 1):
-            out = self.down_blocks[i].smart_forward(feature_maps[-1])
-            feature_maps.append(out)
-        # TEMPORAL ENCODER
-        out, att = self.temporal_encoder(
-            feature_maps[-1], batch_positions=batch_positions, pad_mask=pad_mask
-        )
-        # SPATIAL DECODER
-        if self.return_maps:
-            maps = [out]
-        for i in range(self.n_stages - 1):
-            skip = self.temporal_aggregator(
-                feature_maps[-(i + 2)], pad_mask=pad_mask, attn_mask=att
-            )
-            out = self.up_blocks[i](out, skip)
-            if self.return_maps:
-                maps.append(out)
-
-        if self.encoder:
-            return out, maps
-        else:
-            out = self.out_conv(out)
-            if return_att:
-                return out, att
-            if self.return_maps:
-                return out, maps
-            else:
-                return out
-
-
 
 class TemporallySharedBlock(nn.Module):
     """
@@ -412,6 +417,7 @@ class TemporallySharedBlock(nn.Module):
             _, c, h, w = out.shape
             out = out.view(b, t, c, h, w)
             return out
+
 
 
 class ConvLayer(nn.Module):
@@ -463,6 +469,7 @@ class ConvLayer(nn.Module):
         return self.conv(input)
 
 
+
 class ConvBlock(TemporallySharedBlock):
     def __init__(
         self,
@@ -482,6 +489,7 @@ class ConvBlock(TemporallySharedBlock):
 
     def forward(self, input):
         return self.conv(input)
+
 
 
 class DownConvBlock(TemporallySharedBlock):
@@ -523,6 +531,7 @@ class DownConvBlock(TemporallySharedBlock):
         return out
 
 
+
 class UpConvBlock(nn.Module):
     def __init__(
         self, d_in, d_out, k, s, p, norm="batch", d_skip=None, padding_mode="reflect"
@@ -554,6 +563,7 @@ class UpConvBlock(nn.Module):
         out = self.conv1(out)
         out = out + self.conv2(out)
         return out
+
 
 
 class Temporal_Aggregator(nn.Module):

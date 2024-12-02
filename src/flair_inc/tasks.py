@@ -30,7 +30,6 @@ def check_batchnorm_and_batch_size(config, seg_module):
             sys.exit(1)  # Exit the script
 
 
-
 def train(config, data_module, seg_module, out_dir):
     """
     Trains a model using the provided data module and segmentation module.
@@ -107,7 +106,6 @@ def train(config, data_module, seg_module, out_dir):
     trainer.validate(seg_module, datamodule=data_module)
     
     return ckpt_callback
-
 
 
 def predict(config, data_module, seg_module, out_dir):

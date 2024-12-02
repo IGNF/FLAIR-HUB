@@ -1,28 +1,33 @@
 import torch
-import torch.nn as nn
-
 import segmentation_models_pytorch as smp
+from typing import Dict, Any
 from transformers import AutoModelForSemanticSegmentation, AutoConfig
 
-from typing import Dict, Any
 
 
-class FLAIR_MonoTemporal(nn.Module):
+class FLAIR_MonoTemporal(torch.nn.Module):
     
     def __init__(self, 
-                 config : Dict[str, Any],
+                 config: Dict[str, Any],
                  channels: int = 3,
                  classes: int = 19,
-                 return_backbone_only: bool = False, 
-                ):
-        
+                 return_backbone_only: bool = False
+                ) -> None:
+        """
+        Initialize the FLAIR_MonoTemporal model with the provided configuration.
+        Args:
+            config (Dict[str, Any]): The configuration dictionary for the model.
+            channels (int, optional): The number of input channels. Default is 3 (RGB).
+            classes (int, optional): The number of output classes. Default is 19.
+            return_backbone_only (bool, optional): If True, returns only the backbone of the model. Default is False.
+        """
         super(FLAIR_MonoTemporal, self).__init__()
-        
+
         n_channels = channels
         n_classes = classes
         self.return_backbone_only = return_backbone_only
-        
-        ##### loading architecture from segemntation_models_pytorch
+
+        ##### loading architecture from segmentation_models_pytorch
         if config['models']['monotemp_model']['arch'].split('_')[0] == 'smp':
             encoder, decoder = config['models']['monotemp_model']['arch'].split('_')[1].split('-')[0], config['models']['monotemp_model']['arch'].split('_')[1].split('-')[1]
             self.seg_model = smp.create_model(
@@ -32,7 +37,7 @@ class FLAIR_MonoTemporal(nn.Module):
                 in_channels=n_channels
             )  
             self.cfg_model = None                  
-            
+
         ##### loading architecture from HuggingFace transformers AutoModelForSemanticSegmentation
         elif config['models']['monotemp_model']['arch'].split('_')[0] == 'hf':  
             self.cfg_model = AutoConfig.from_pretrained(
@@ -54,18 +59,26 @@ class FLAIR_MonoTemporal(nn.Module):
                 )                          
         else:
             raise ValueError('Wrong monotemp_model provided. Cannot retrieve model. See readme.')
-            
-            
+
         if self.return_backbone_only:
             if config['models']['monotemp_model']['arch'].split('_')[0] == 'smp':
                 self.seg_model = self.seg_model.encoder
             elif config['models']['monotemp_model']['arch'].split('_')[0] == 'hf': 
-                self.seg_model = self.seg_model.backbone                
-            
-                   
+                self.seg_model = self.seg_model.backbone
+
+
     @staticmethod
-    def update_model_channels(model, num_channels=4, init_mode='third'):
-        print('--- Modifying Swin encoder 1st conv channel number to', num_channels)
+    def update_model_channels(model: torch.nn.Module, num_channels: int = 4, init_mode: str = 'third') -> torch.nn.Module:
+        """
+        Updates the first convolution layer of the encoder to match the specified number of input channels.
+        Args:
+            model (torch.nn.Module): The model whose encoder needs to be updated.
+            num_channels (int, optional): The desired number of input channels. Default is 4.
+            init_mode (str, optional): The initialization mode for new channels. Default is 'third'.
+        Returns:
+            torch.nn.Module: The updated model with modified channels.
+        """
+        print(f'--- Modifying Swin encoder 1st conv channel number to {num_channels}')
         model.config.backbone_config.num_channels = num_channels
         backbone = model.backbone
         conv1 = backbone.embeddings.patch_embeddings.projection
@@ -111,3 +124,4 @@ class FLAIR_MonoTemporal(nn.Module):
         patch_embeddings = backbone.embeddings.patch_embeddings
         patch_embeddings.num_channels = num_channels
         return model
+

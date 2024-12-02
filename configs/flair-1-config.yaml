@@ -50,11 +50,11 @@ modalities:
 models:
     
     monotemp_model: 
-        arch: 'hf_openmmlab/upernet-swin-small' #'smp_resnet34-unet' 
+        arch: 'smp_resnet34-unet' #'hf_openmmlab/upernet-swin-small'  
         new_channels_init_mode: 'third'
 
     multitemp_model: 
-        ref_date: '05-15' # defined for whole dataset     
+        ref_date: '05-15' # defined for whole dataset    
         encoder_widths: [64, 64, 64, 128] # 1st and last must be equivalent to decoder_widths
         decoder_widths: [32, 32, 64, 128] # 1st and last must be equivalent to encoder_widths
         out_conv: [32, 20]

@@ -1,0 +1,3 @@
+[console_scripts]
+flair_inc = flair_inc.main:main
+flair_inc_detect = zone_detect.main:main
