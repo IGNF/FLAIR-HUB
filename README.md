@@ -11,6 +11,7 @@
 - [ ] If multitemp only, verify base_shape
 - [ ] Test LPIS labels
 - [ ] Add to config : filtering values S2
+- [ ] Align : Transformer for the fusion
 
 
 
