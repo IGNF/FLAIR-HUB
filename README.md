@@ -117,10 +117,10 @@ flair_data = {
 
 ```bash
 # it's recommended to install on a conda virtual env
-conda create -n my_env_name -c conda-forge python=3.11.6
-conda activate my_env_name
-git clone git@github.com:IGNF/FLAIR-1.git
-cd FLAIR-1*
+conda create -n FLAIR_INC -c conda-forge python=3.12.5
+conda activate FLAIR_INC
+git clone git@github.com:IGNF/FLAIR-INC.git
+cd FLAIR_INC*
 pip install -e .
 # if torch.cuda.is_available() returns False, do the following :
 # pip install torch>=2.0.0 --extra-index-url=https://download.pytorch.org/whl/cu117
