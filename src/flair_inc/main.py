@@ -15,7 +15,7 @@ from pytorch_lightning.utilities.rank_zero import rank_zero_only
 from flair_inc.tasks import train, predict
 from flair_inc.utils.utils_tasks import get_data_module, get_segmentation_module
 from flair_inc.utils.utils_data import get_paths, get_sentinel_dates_mtd
-from flair_inc.utils.utils import setup_environment, Logger, copy_csv_and_config, print_recap
+from flair_inc.utils.utils import setup_environment, Logger, copy_csv_and_config, print_recap, emission_tracking_summary
 
 from codecarbon import OfflineEmissionsTracker
 
@@ -188,14 +188,17 @@ def main():
     config, out_dir = setup_environment(args)
 
     if config['codecarbon']:
-
-        tracker = OfflineEmissionsTracker(output_dir=out_dir, 
-                                project_name='flair-inc | codecarbon',
-                                log_level="error",
-                                country_iso_code='FRA'
-
+        node_id = os.getenv("SLURM_NODEID", "0") 
+        output_emission_dir = Path(out_dir) / f"node_{node_id}_emissions"
+        output_emission_dir.mkdir(parents=True, exist_ok=True)
+        tracker = OfflineEmissionsTracker(
+            output_dir=str(output_emission_dir),
+            project_name=f'flair-inc | node_{node_id}',
+            log_level="error",
+            country_iso_code='FRA'
         )
         tracker.start()
+
 
     # Custom Logger for console/logfile output
     sys.stdout = Logger(
@@ -226,18 +229,9 @@ def main():
         out_dir_predict.mkdir(parents=True, exist_ok=True)
         predict_stage(config, dm, out_dir_predict, trained_state_dict)
 
-
     if config['codecarbon']:
-
         tracker.stop()
-
-        print("\n----- Emissions Tracking Summary -----")
-        print(f"Total CO2 emissions: {tracker.final_emissions} kg CO2e")
-        print(f"Total energy consumption: {tracker._total_energy} kWh")
-        print(f"Total energy cpu: {tracker._total_cpu_energy} kWh")        
-        print(f"Total energy gpu: {tracker._total_gpu_energy} kWh")
-        print(f"Total energy ram: {tracker._total_ram_energy} kWh")
-        print(f"Measures done : {tracker._measure_occurrence}.")
+        emission_tracking_summary(out_dir)  
 
 
 if __name__ == "__main__":
