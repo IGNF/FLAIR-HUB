@@ -108,6 +108,7 @@ def emission_tracking_summary(out_dir: Union[str, Path]) -> None:
     aggregated = pd.concat(dfs).sum(numeric_only=True)
 
     # Print the aggregated emissions summary
+    print('')
     print("----- Total Emissions Summary -----")
     print(f"Total CO2 emissions: {aggregated['emissions']:.6f} kg CO2e")
     print(f"Total energy consumption: {aggregated['energy_consumed']:.6f} kWh")
