@@ -1,7 +1,6 @@
 import datetime
 import os
 import argparse 
-import shutil
 import torch
 import sys
 import numpy as np
@@ -14,40 +13,15 @@ from pytorch_lightning import seed_everything
 from pytorch_lightning.utilities.rank_zero import rank_zero_only  
 
 from flair_inc.tasks import train, predict
-from flair_inc.tasks_utils import get_data_module, get_segmentation_module, get_paths, get_sentinel_dates_mtd
-from flair_inc.utils import read_config, print_recap
-
+from flair_inc.utils_tasks import get_data_module, get_segmentation_module, get_paths, get_sentinel_dates_mtd
+from flair_inc.utils import setup_environment, Logger, copy_csv_and_config, print_recap
 
 
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("--conf", help="Path to the .yaml config file", required=True)
 
-
-def setup_environment(args):
-    """
-    This function reads the configuration file, creates the output directory, 
-    and sets up the logger.
-    """
-    config = read_config(args.conf)
-    out_dir = Path(config['paths']["out_folder"], config['paths']["out_model_name"])
-    out_dir.mkdir(parents=True, exist_ok=True)
-    return config, out_dir 
-
-@rank_zero_only
-class Logger(object):
-    def __init__(self, filename='Default.log'):
-        self.terminal = sys.stdout
-        self.log = open(filename, 'w', encoding='utf-8') 
-        self.encoding = self.terminal.encoding
-
-    def write(self, message):
-        self.terminal.write(message)
-        self.log.write(message)
-
-    def flush(self):
-        self.log.flush()
-        
+   
 
 def get_datasets(config: Dict[str, Any]) -> Tuple[Optional[Dict], Optional[Dict], Optional[Dict]]:
     """
@@ -75,19 +49,6 @@ def get_datasets(config: Dict[str, Any]) -> Tuple[Optional[Dict], Optional[Dict]
             d['DATES_S1_DESC'] = dates_s1desc
     
     return dict_train, dict_val, dict_test
-
-@rank_zero_only
-def copy_csv_and_config(config, out_dir, args):
-    """
-    Copy the CSV files and configuration file to the output directory.
-    """
-    csv_copy_dir = Path(out_dir, 'used_csv_and_config')
-    csv_copy_dir.mkdir(parents=True, exist_ok=True)
-    if config["tasks"]["train"]:
-        shutil.copy(config["paths"]["train_csv"], csv_copy_dir)
-        shutil.copy(config["paths"]["val_csv"], csv_copy_dir)
-    if config["tasks"]["predict"]: shutil.copy(config["paths"]["test_csv"], csv_copy_dir)
-    shutil.copy(args.conf, csv_copy_dir)
 
 
 @rank_zero_only
@@ -162,7 +123,6 @@ def load_checkpoint(conf, seg_module, exit_on_fail=False):
         print('###############################################################')
     print()
     
-
 
 def training_stage(config, data_module, out_dir):
     """

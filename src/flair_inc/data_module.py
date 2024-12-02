@@ -3,7 +3,7 @@ from torch.utils.data import DataLoader
 from pytorch_lightning import LightningDataModule
 
 from flair_inc.data_loader import flair_dataset
-from flair_inc.data_utils import pad_collate_flair
+from flair_inc.utils_data import pad_collate_flair
 
 
 
