@@ -12,6 +12,7 @@
 - [ ] Test LPIS labels
 - [ ] Add to config : filtering values S2
 - [ ] Align : Transformer for the fusion
+- [ ] Change first layer of decoder for concat featmaps
 
 
 
