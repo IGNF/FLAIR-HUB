@@ -1,3 +1,16 @@
+# TO-DO 
+- [ ] Add auxiliary losses | manage nb aux losses with SEN keys
+- [ ] Add normalization for all modalities : config + dataloader
+- [ ] Check labels starting at 0/1
+- [ ] MNT/MNS : allow pass the two bands and not calc elev
+- [ ] Add auxiliary head (stage 3 SWIN) to monotemp ?
+- [ ] Modify reshape_to_labels and MetadataMLP to extract self.list_x.shape[-2:]
+- [ ] Check alignement spatial dimensions aerial RLT
+- [ ] If multitemp only, verify base_shape
+- [ ] Test LPIS labels
+
+
+
 <div align="center">
   
 # FLAIR-INC
@@ -233,18 +246,11 @@ The pipeline is configured using a YAML file (`flair-1-config-detect.yaml`).
 
 ## Baseline results
 
-| Model | mIoU 
------------- | ------------- 
-| baseline U-Net (ResNet34) | 0.5443±0.0014
-| baseline U-Net (ResNet34) + _metadata + augmentation_ | 0.5570±0.0027
+| AERIAL | AERIAL-RLT | SPOT | ELEV | SENTINEL-2 | SENTINEL-1 ASC | SENTINEL-1 DESC | MODEL | mIoU 
+------------ | ------------- | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
+| 
 
-The baseline U-Net with ResNet34 backbone obtains the following confusion matrix: 
 
-<p>
-  <img width="50%" src="images/flair-1_heatmap.png">
-  <br>
-  <em>Baseline confusion matrix of the test dataset normalized by rows.</em>
-</p>
 
 
 ## Reference
@@ -268,12 +274,6 @@ GENCI-IDRIS (Grant 2022-A0131013803).
 ## Dataset license
 
 The "OPEN LICENCE 2.0/LICENCE OUVERTE" is a license created by the French government specifically for the purpose of facilitating the dissemination of open data by public administration. 
-If you are looking for an English version of this license, you can find it on the official GitHub page at the [official github page](https://github.com/etalab/licence-ouverte).
-
-### Applicable legislation
-
-This licence is governed by French law.
-
-### Compatibility of this licence
-
-This licence has been designed to be compatible with any free licence that at least requires an acknowledgement of authorship, and specifically with the previous version of this licence as well as with the following licences: United Kingdom’s “Open Government Licence” (OGL), Creative Commons’ “Creative Commons Attribution” (CC-BY) and Open Knowledge Foundation’s “Open Data Commons Attribution” (ODC-BY).
+If you are looking for an English version of this license, you can find it on the official GitHub page at the [official github page](https://github.com/etalab/licence-ouverte).<br>
+Applicable legislation : This licence is governed by French law.<br>
+Compatibility of this licence : This licence has been designed to be compatible with any free licence that at least requires an acknowledgement of authorship, and specifically with the previous version of this licence as well as with the following licences: United Kingdom’s “Open Government Licence” (OGL), Creative Commons’ “Creative Commons Attribution” (CC-BY) and Open Knowledge Foundation’s “Open Data Commons Attribution” (ODC-BY).
