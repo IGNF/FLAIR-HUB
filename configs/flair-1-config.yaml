@@ -53,7 +53,7 @@ models:
     
     monotemp_model: 
         arch: 'smp_resnet34-unet' #'hf_openmmlab/upernet-swin-small'  
-        new_channels_init_mode: 'third'
+        new_channels_init_mode: 'third'  ## first, second, third, zeros, random
 
     multitemp_model: 
         ref_date: '05-15' # defined for whole dataset    
