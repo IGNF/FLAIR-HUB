@@ -1,6 +1,6 @@
 # TO-DO 
 - [x] Add codecarbon measures
-- [ ] Supr init zeros
+- [x] Supr init zeros
 - [ ] 3 -> 1 channel : sum
 - [ ] 3 -> 2 channels : ? For now, dropping third channel
 - [ ] Add auxiliary losses | manage nb aux losses with SEN keys
