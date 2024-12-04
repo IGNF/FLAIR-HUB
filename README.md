@@ -19,6 +19,7 @@
 - [ ] Add to config : VERBOSE
 - [ ] Align : Transformer for the fusion
 - [ ] ~~Change first layer of decoder for concat featmaps or small MLP~~ align spatial then conv2d then UperNet for decoding fused features / UTAE : stack and mean..
+- [ ] Handle all aux_losses = False --> Which one ? 
 
 
 
