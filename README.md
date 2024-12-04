@@ -148,7 +148,7 @@ This library comprises two main entry points:<br>
 The flair module is used for training, inference and metrics calculation at the patch level. To use this pipeline :
 
 ```bash
-flair --conf=/my/conf/file.yaml
+flair_inc --conf=/my/conf/file.yaml
 ```
 This will perform the tasks specified in the configuration file. If ‘train’ is enabled, it will train the model and save the trained model to the output folder. If ‘predict’ is enabled, it will load the trained model (or a specified checkpoint if ‘train’ is not enabled) and perform prediction on the test data. If ‘metrics’ is enabled, it will calculate the mean Intersection over Union (mIoU) and other IoU metrics for the predicted and ground truth masks.
 A toy dataset (reduced size) is available to check that your installation and the information in the configuration file are correct.
@@ -158,7 +158,7 @@ Note: A notebook is available in the legacy-torch branch (which uses different l
 This module aims to infer a pre-trained model at a larger scale than individual patches. It allows overlapping inferences using a margin argument. Specifically, this module expects a single georeferenced TIFF file as input.
 
 ```bash
-flair-detect --conf=/my/conf/file-detect.yaml
+flair_inc_detect --conf=/my/conf/file-detect.yaml
 ```
 
 <br><br>
