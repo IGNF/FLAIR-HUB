@@ -7,7 +7,7 @@
 - [ ] Add normalization for all modalities : config + dataloader
 - [ ] Check labels starting at 0/1
 - [ ] Modality Dropping : quand on entraine avec plusieurs modalités : rendre possible d'aléatoirement ne pas utiliser une des modalités
-- [ ] MNT/MNS : allow pass the two bands and not calc elev
+- [x] MNT/MNS : allow pass the two bands and not calc elev
 - [ ] MNT/MNS : check if the 0/1 normalisation works
 - [ ] Add auxiliary head (stage 3 SWIN) to monotemp ?
 - [x] Modify reshape_to_labels 
