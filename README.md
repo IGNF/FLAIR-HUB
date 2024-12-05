@@ -1,19 +1,19 @@
 # TO-DO 
-- [x] Add codecarbon measures
-- [x] Supr init zeros
-- [x] 3 -> 1 channel : sum
+- ✅ Add codecarbon measures
+- ✅ Supr init zeros
+- ✅ 3 -> 1 channel : sum
 - [ ] 3 -> 2 channels : ? For now, dropping third channel
 - [ ] Add auxiliary losses | manage nb aux losses with SEN keys
 - [ ] Add normalization for all modalities : config + dataloader
 - [ ] Check labels starting at 0/1
 - [ ] Modality Dropping : quand on entraine avec plusieurs modalités : rendre possible d'aléatoirement ne pas utiliser une des modalités
-- [x] MNT/MNS : allow pass the two bands and not calc elev
+- ✅ MNT/MNS : allow pass the two bands and not calc elev
 - [ ] MNT/MNS : check if the 0/1 normalisation works
 - [ ] Add auxiliary head (stage 3 SWIN) to monotemp ?
-- [x] Modify reshape_to_labels 
+- ✅ Modify reshape_to_labels 
 - [ ] MetadataMLP to extract self.list_x.shape[-2:]
-- [x] Check alignement spatial dimensions aerial RLT
-- [x] If multitemp only, verify base_shape
+- ✅ Check alignement spatial dimensions aerial RLT
+- ✅ If multitemp only, verify base_shape
 - [ ] Test LPIS labels
 - [ ] Add to config : filtering values S2
 - [ ] Add to config : VERBOSE
