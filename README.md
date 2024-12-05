@@ -16,7 +16,7 @@
 - ✅ If multitemp only, verify base_shape
 - [ ] Test LPIS labels
 - [ ] Add to config : filtering values S2
-- [ ] Add to config : VERBOSE
+- ✅ Add to config : VERBOSE
 - [ ] Align : Transformer for the fusion
 - [ ] ~~Change first layer of decoder for concat featmaps or small MLP~~ align spatial then conv2d then UperNet for decoding fused features / UTAE : stack and mean..
 - ✅ Handle all aux_losses = False --> for now 1 monotemp needs to be true
