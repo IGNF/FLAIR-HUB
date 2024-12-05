@@ -3,7 +3,7 @@
 - ✅ Supr init zeros
 - ✅ 3 -> 1 channel : sum
 - [ ] 3 -> 2 channels : ? For now, dropping third channel
-- [ ] Add auxiliary losses | manage nb aux losses with SEN keys
+- ✅ Add auxiliary losses for all modalitites : master loss = fusion
 - [ ] Add normalization for all modalities : config + dataloader
 - [ ] Check labels starting at 0/1
 - [ ] Modality Dropping : quand on entraine avec plusieurs modalités : rendre possible d'aléatoirement ne pas utiliser une des modalités
