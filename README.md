@@ -6,7 +6,7 @@
 - ✅ Add auxiliary losses for all modalitites : master loss = fusion
 - [ ] Add normalization for all modalities : config + dataloader
 - [ ] Check labels starting at 0/1
-- ✅ Modality Dropping : quand on entraine avec plusieurs modalités : rendre possible d'aléatoirement ne pas utiliser une des modalités : HAD TO REPLACE WITH ZERO FILLED DUMMY TENSORS TO ALLOW INIT CONV2D LAYERS AND LEARNABLE PARAMS
+- ✅ Modality Dropping : quand on entraine avec plusieurs modalités : rendre possible d'aléatoirement ne pas utiliser une des modalités <code style="color : green">HAD TO REPLACE WITH ZERO FILLED DUMMY TENSORS TO ALLOW INIT CONV2D LAYERS AND LEARNABLE PARAMS</code>
 - ✅ MNT/MNS : allow pass the two bands and not calc elev
 - [ ] MNT/MNS : check if the 0/1 normalisation works
 - [ ] Add auxiliary head (stage 3 SWIN) to monotemp ?
@@ -15,10 +15,10 @@
 - ✅ Check alignement spatial dimensions aerial RLT
 - ✅ If multitemp only, verify base_shape
 - [ ] Test LPIS labels
-- [ ] Add to config : filtering values S2
+- ✅ Add to config : filtering values S2
 - ✅ Add to config : VERBOSE
 - [ ] Align : Transformer for the fusion
-- [ ] ~~Change first layer of decoder for concat featmaps or small MLP~~ align spatial then conv2d then UperNet for decoding fused features / UTAE : stack and mean..
+- ✅ ~~Change first layer of decoder for concat featmaps or small MLP~~ <code style="color : name_color">learnable conv2d and dedicated upernet for fused features decoder if at least 1 monotemp, if only UTAE : stack, mean</code>
 - ✅ Handle all aux_losses = False --> for now 1 monotemp needs to be true
 
 
