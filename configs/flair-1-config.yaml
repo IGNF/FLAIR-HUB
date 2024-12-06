@@ -1,8 +1,9 @@
 codecarbon: True
 
 paths :   
+
     out_folder: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/results/'
-    out_model_name: 'TRYOUTS'
+    out_model_name: 'TEST_FUSION'
     train_csv: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/split_csv/toy/TRAIN_FLAIR-INC_TOY.csv'
     val_csv: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/split_csv/toy/VALID_FLAIR-INC_TOY.csv'
     test_csv: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/split_csv/toy/TEST_FLAIR-INC_TOY.csv'
@@ -10,24 +11,30 @@ paths :
     ckpt_model_path: ''
     path_metadata_aerial: '../flair_aerial_metadata.json'
 
+
 tasks: 
+
     train: True
     train_tasks: 
         init_weights_only_from_ckpt: False
         resume_training_from_ckpt: False
+
     predict: True
     write_files: True
+    georeferencing_output: True
+
 
 modalities:
-    inputs:
-        AERIAL_RGBI      : True
-        AERIAL-RLT_PAN   : False
-        DEM_ELEV         : True
-        SPOT_RGBI        : True
-        SENTINEL1-ASC_TS : True
-        SENTINEL1-DESC_TS: True
-        SENTINEL2_TS     : True         
 
+    inputs:
+        AERIAL_RGBI      : False
+        AERIAL-RLT_PAN   : False
+        DEM_ELEV         : False
+        SPOT_RGBI        : False
+        SENTINEL2_TS     : True 
+        SENTINEL1-ASC_TS : False
+        SENTINEL1-DESC_TS: False
+        
     labels : 'AERIAL_LABEL-COSIA'
 
     inputs_channels:
@@ -36,30 +43,61 @@ modalities:
         sentinel2 : [1,2,3,4,5,6,7,8,9,10]
         sentinel1 : [1,2] 
 
-    filter_sentinel2: True 
-    temporal_average_sentinel2 : False  # False, monthly, semi-monthly
-    temporal_average_sentinel1 : False
+    aux_loss: 
+        AERIAL_RGBI      : False
+        AERIAL-RLT_PAN   : False
+        DEM_ELEV         : False
+        SPOT_RGBI        : False
+        SENTINEL2_TS     : False
+        SENTINEL1-ASC_TS : False
+        SENTINEL1-DESC_TS: False
+    
+    aux_loss_weight: 1.5
 
-    use_augmentation: False
-    use_metadata: False   
+
+    modality_dropout:
+        AERIAL_RGBI      : 0.1
+        AERIAL-RLT_PAN   : 0
+        DEM_ELEV         : 0.1
+        SPOT_RGBI        : 0.1
+        SENTINEL2_TS     : 0.1
+        SENTINEL1-ASC_TS : 0.1
+        SENTINEL1-DESC_TS: 0.1
+
+
+    pre_processings: 
+        filter_sentinel2: True 
+        filter_sentinel2_max_cloud : 1 # [0-100]
+        filter_sentinel2_max_snow : 1 # [0-100]
+        filter_sentinel2_max_frac_cover : 0.05 # [0-1]
+        temporal_average_sentinel2 : False  # possible : False, monthly, semi-monthly
+        temporal_average_sentinel1 : False
+        calc_elevation : False
+        use_augmentation: False
+        use_metadata: False   
 
     normalization: 
-        norm_type : custom
+        norm_type : custom   # possible :  custom, scaling, without
         aerial_means : [105.08, 110.87, 101.82, 50]
         aerial_stds  : [105.08, 110.87, 101.82, 50]
-
+        spot_means : [105.08, 110.87, 101.82, 50]
+        spot_stds  : [105.08, 110.87, 101.82, 50]
+        elev_means : [105.08, 110.87, 101.82, 50]
+        elev_stds  : [105.08, 110.87, 101.82, 50]
 
 models:
     
     monotemp_model: 
-        arch: 'smp_resnet34-unet' #'hf_openmmlab/upernet-swin-small'  
-        new_channels_init_mode: 'third'  ## first, second, third, zeros, random
+        #arch: 'hf_openmmlab/upernet-swin-small' 
+        arch: 'smp_resnet34-unet' 
+
+        new_channels_init_mode: 'copy_third' # possible :  copy_first, copy_second, copy_third, random
 
     multitemp_model: 
         ref_date: '05-15' # defined for whole dataset    
-        encoder_widths: [64, 64, 64, 128] # 1st and last must be equivalent to decoder_widths
-        decoder_widths: [32, 32, 64, 128] # 1st and last must be equivalent to encoder_widths
-        out_conv: [32, 20]
+        encoder_widths: [64, 64, 64, 128] # last must be equivalent to decoder_widths
+        decoder_widths: [32, 32, 64, 128] # last must be equivalent to encoder_widths
+        out_conv: [32, 19]
         str_conv_k: 3
         str_conv_s: 1
         str_conv_p: 1
@@ -73,9 +111,8 @@ models:
         pad_value: 0
         padding_mode: "reflect"
 
-    fusion_operation: 'add'
-
 classes: 
+
     1: [1, 'building']
     2: [1, 'pervious surface']
     3: [1, 'impervious surface']
@@ -96,24 +133,28 @@ classes:
     18: [1, 'greenhouse']
     19: [0, 'other']
 
+hyperparams:
 
-seed: 2022
-batch_size: 2
-learning_rate: 0.02
-num_epochs: 1
-use_weights: True
-georeferencing_output: True
-accelerator: 'gpu'
-num_nodes: 1
-gpus_per_node: 1
-strategy: 'auto'
-num_workers: 0
-ckpt_save_also_last: True
-ckpt_verbose: False
-ckpt_weights_only: False
-ckpt_monitor: 'val_loss'
-ckpt_monitor_mode: 'min'
-ckpt_earlystopping_patience: 30
-cp_csv_and_conf_to_output: True
-enable_progress_bar: True
-progress_rate: 10
+    num_epochs: 2
+    batch_size: 2
+    seed: 2022
+    learning_rate: 0.02
+    use_class_weights: True
+
+    accelerator: 'gpu'
+    num_nodes: 1
+    gpus_per_node: 1
+    strategy: 'auto'
+    num_workers: 0
+
+saving:   
+
+    ckpt_save_also_last: True
+    ckpt_verbose: False
+    ckpt_weights_only: False
+    ckpt_monitor: 'val_loss'
+    ckpt_monitor_mode: 'min'
+    ckpt_earlystopping_patience: 30
+    cp_csv_and_conf_to_output: True
+    enable_progress_bar: True
+    progress_rate: 10
