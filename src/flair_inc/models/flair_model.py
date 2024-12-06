@@ -250,7 +250,7 @@ class FLAIR_TimeTexture(nn.Module):
             aux_losses (dict): Dictionary of auxiliary losses.
         """
         total_params = 0
-        table = f"| {'Model Key':<20} | {'Type':<10} | {'Loss':<10} | {'Parameters':<15} |\n"
+        table = f"| {'Model Key':<20} | {'Type':<10} | {'Aux loss':<10} | {'Parameters':<15} |\n"
         table += f"| {'-'*20} | {'-'*10} | {'-'*10} | {'-'*15} |\n"
         for key, model in models.items():
             if model is not None:
@@ -264,7 +264,7 @@ class FLAIR_TimeTexture(nn.Module):
                     num_params = sum(p.numel() for p in model.parameters())
                     total_params += num_params
                     model_type = 'decoder'
-                    aux_loss = 'Yes'
+                    aux_loss = 'No'
                     table += f"| {key:<20} | {model_type:<10} | {aux_loss:<10} | {num_params:>15,} |\n"
         table += f"| {'**TOTAL PARAMS**':<20} | {'':<10} | {'':<10} | {total_params:>15,} |\n"
         print('')
