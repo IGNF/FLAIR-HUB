@@ -17,7 +17,7 @@
 - [ ] Test LPIS labels
 - ✅ Add to config : filtering values S2
 - ✅ Add to config : VERBOSE
-- [ ] Align : Transformer for the fusion
+- ❌ Align : Transformer for the fusion <code style="color : name_color">If really willing, please provide working code</code>
 - ✅ ~~Change first layer of decoder for concat featmaps or small MLP~~ <code style="color : name_color">learnable conv2d and dedicated upernet for fused features decoder if at least 1 monotemp, if only UTAE : stack, mean</code>
 - ✅ Handle all aux_losses = False --> for now 1 monotemp needs to be true
 - [ ] SHould class weights be defined per modality ? 
