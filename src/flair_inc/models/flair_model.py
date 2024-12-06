@@ -358,15 +358,17 @@ class FLAIR_TimeTexture(nn.Module):
             feature_maps (dict): Dictionary of feature maps to be aligned.
             modalities_dropout_dict (dict): Dictionary containing dropout probabilities for each modality.
         Returns:
-            dict: Updated feature maps with modality dropout applied and replaced by dummy zero features.
+            dict: Updated feature maps with modality dropout applied and replaced by parameter tensors.
         """
         for key in feature_maps.keys():
             dropout_prob = modalities_dropout_dict[key]
             if torch.rand(1).item() < dropout_prob:
-                dummy_features = []
+                param_features = []
                 for tensor in feature_maps[key]:
-                    dummy_features.append(torch.zeros_like(tensor))
-                feature_maps[key] = dummy_features
+                    param_tensor = nn.Parameter(torch.empty_like(tensor))
+                    nn.init.xavier_uniform_(param_tensor)
+                    param_features.append(param_tensor)
+                feature_maps[key] = param_features
         return feature_maps
 
 
