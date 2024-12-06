@@ -20,6 +20,7 @@
 - [ ] Align : Transformer for the fusion
 - ✅ ~~Change first layer of decoder for concat featmaps or small MLP~~ <code style="color : name_color">learnable conv2d and dedicated upernet for fused features decoder if at least 1 monotemp, if only UTAE : stack, mean</code>
 - ✅ Handle all aux_losses = False --> for now 1 monotemp needs to be true
+- [ ] SHould class weights be defined per modality ? 
 
 
 
