@@ -9,7 +9,7 @@
 - ✅ Modality Dropping : quand on entraine avec plusieurs modalités : rendre possible d'aléatoirement ne pas utiliser une des modalités <code style="color : green">HAD TO REPLACE WITH ZERO FILLED DUMMY TENSORS TO ALLOW INIT CONV2D LAYERS AND LEARNABLE PARAMS</code>
 - ✅ MNT/MNS : allow pass the two bands and not calc elev
 - [ ] MNT/MNS : check if the 0/1 normalisation works
-- [ ] Add auxiliary head (stage 3 SWIN) to monotemp ?
+- ❌ Add auxiliary head (stage 3 SWIN) to monotemp ? <code style="color : name_color">Heavy. I think its not needed for now</code>
 - ✅ Modify reshape_to_labels 
 - [ ] MetadataMLP to extract self.list_x.shape[-2:]
 - ✅ Check alignement spatial dimensions aerial RLT
