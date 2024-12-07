@@ -82,27 +82,27 @@ Participate in obtaining more accurate maps for a more comprehensive description
 -->
 
 ```
-flair_data = {
-1   : ['building','#db0e9a'] ,
-2   : ['pervious surface','#938e7b'],
-3   : ['impervious surface','#f80c00'],
-4   : ['bare soil','#a97101'],
-5   : ['water','#1553ae'],
-6   : ['coniferous','#194a26'],
-7   : ['deciduous','#46e483'],
-8   : ['brushwood','#f3a60d'],
-9   : ['vineyard','#660082'],
-10  : ['herbaceous vegetation','#55ff00'],
-11  : ['agricultural land','#fff30d'],
-12  : ['plowed land','#e4df7c'],
-13  : ['swimming_pool','#3de6eb'],
-14  : ['snow','#ffffff'],
-15  : ['clear cut','#8ab3a0'],
-16  : ['mixed','#6b714f'],
-17  : ['ligneous','#c5dc42'],
-18  : ['greenhouse','#9999ff'],
-19  : ['other','#000000'],
-}
+flair_cosia = 
+ 
+0  :   'building'                'bâtiment'            '#db0e9a'
+1  :   'greenhouse'              'serre'               '#9999ff'
+2  :   'swimming_pool'           'piscine'             '#3de6eb' 
+3  :   'impervious surface'      'zone imperméable'    '#f80c00' 
+4  :   'pervious surface'        'zone perméable'      '#938e7b' 
+5  :   'bare soil'               'sol nu'              '#a97101' 
+6  :   'water'                   'eau'                 '#1553ae' 
+7  :   'snow'                    'neige'               '#ffffff' 
+8  :   'herbaceous vegetation'   'surface herbacée'    '#55ff00' 
+9  :   'agricultural land'       'culture'             '#fff30d' 
+10 :   'plowed land'             'terre labourée'      '#e4df7c' 
+11 :   'vineyard'                'vigne'               '#660082' 
+12 :   'deciduous'               'feuillu'             '#46e483' 
+13 :   'coniferous'              'conifère'            '#194a26' 
+14 :   'brushwood'               'broussaille'         '#f3a60d' 
+15 :   'clear cut'               'coupe'               '#8ab3a0' 
+16 :   'ligneous'                'ligneux'             '#c5dc42' 
+17 :   'mixed'                   'mixte'               '#6b714f'
+18 :   'undefined'               'indéterminé'         '#000000' 
 ```
 
 
