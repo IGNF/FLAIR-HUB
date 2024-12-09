@@ -6,7 +6,7 @@
 - ✅ Add auxiliary losses for all modalitites : master loss = fusion
 - [ ] Add normalization for all modalities : config + dataloader
 - [ ] Check labels starting at 0/1
-- ✅ Modality Dropping : quand on entraine avec plusieurs modalités : rendre possible d'aléatoirement ne pas utiliser une des modalités <code style="color : green">HAD TO REPLACE WITH ZERO FILLED DUMMY TENSORS TO ALLOW INIT CONV2D LAYERS AND LEARNABLE PARAMS</code>
+- ✅ Modality Dropping : quand on entraine avec plusieurs modalités : rendre possible d'aléatoirement ne pas utiliser une des modalités <code style="color : green">replaced droped mod by param tensor with same shape</code>
 - ✅ MNT/MNS : allow pass the two bands and not calc elev
 - [ ] MNT/MNS : check if the 0/1 normalisation works
 - ❌ Add auxiliary head (stage 3 SWIN) to monotemp ? <code style="color : name_color">Heavy. I think its not needed for now</code>
