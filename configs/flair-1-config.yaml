@@ -1,5 +1,3 @@
-codecarbon: True
-
 paths :   
 
     out_folder: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/results/'
@@ -149,6 +147,7 @@ hyperparams:
 
 saving:   
 
+    codecarbon: True
     ckpt_save_also_last: True
     ckpt_verbose: False
     ckpt_weights_only: False
