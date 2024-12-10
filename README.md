@@ -26,6 +26,9 @@
 - [ ] Rajouter l'évaluation sur test FLAIR 1 et sur test FLAIR 2
 - [ ] Permettre de pouvoir faire un entrainement sur les subsets FLAIR 1 train et FLAIR 2 train
 - [ ] Permettre de faire k-fold sur aerial : reprendre celui de COSIA
+- [ ] Rajouter loss Lovasz et autre scheduler : si on arrive pas à faire mieux
+- [ ] Faire une exp sur le RPG
+- [ ] Implémenter l'entrainement multi-tâches
 
 
 
