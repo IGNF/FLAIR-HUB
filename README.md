@@ -2,24 +2,24 @@
 - ✅ Add codecarbon measures
 - ✅ Supr init zeros
 - ✅ 3 -> 1 channel : sum
-- [ ] 3 -> 2 channels : ? For now, dropping third channel
 - ✅ Add auxiliary losses for all modalitites : master loss = fusion
-- [ ] Add normalization for all modalities : config + dataloader
 - ✅ Modality Dropping : quand on entraine avec plusieurs modalités : rendre possible d'aléatoirement ne pas utiliser une des modalités <code style="color : green">replaced droped mod by param tensor with same shape</code>
 - ✅ MNT/MNS : allow pass the two bands and not calc elev
-- [ ] MNT/MNS : check if the 0/1 normalisation works
 - ❌ Add auxiliary head (stage 3 SWIN) to monotemp ? <code style="color : name_color">Heavy. I think its not needed for now</code>
 - ✅ Modify reshape_to_labels 
-- [ ] MetadataMLP to extract self.list_x.shape[-2:]
 - ✅ Check alignement spatial dimensions aerial RLT
 - ✅ If multitemp only, verify base_shape
-- [ ] Test LPIS labels
 - ✅ Add to config : filtering values S2
 - ✅ Add to config : VERBOSE
 - ❌ Align : Transformer for the fusion <code style="color : name_color">If really willing, please provide working code</code>
 - ✅ ~~Change first layer of decoder for concat featmaps or small MLP~~ <code style="color : name_color">learnable conv2d and dedicated upernet for fused features decoder if at least 1 monotemp, if only UTAE : stack, mean</code>
 - ✅ Handle all aux_losses = False --> for now 1 monotemp needs to be true
-- [ ] SHould class weights be defined per modality ?
+- [ ] Should class weights be defined per modality ?
+- [ ] 3 -> 2 channels : ? For now, dropping third channel
+- [ ] Add normalization for all modalities : config + dataloader
+- [ ] Test LPIS labels
+- [ ] MetadataMLP to extract self.list_x.shape[-2:]
+- [ ] MNT/MNS : check if the 0/1 normalisation works
 - [ ] remove any 'area_id'
 - [ ] Check labels starting at 0/1
 - [ ] Add patience to config
