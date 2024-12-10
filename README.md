@@ -22,7 +22,6 @@
 - [ ] MNT/MNS : check if the 0/1 normalisation works
 - [ ] remove any 'area_id'
 - [ ] Check labels starting at 0/1
-- [ ] Add patience to config
 - [ ] Conflict channels SEN / stacked dates 
 
 
