@@ -76,12 +76,19 @@ modalities:
 
     normalization: 
         norm_type : custom   # possible :  custom, scaling, without
-        aerial_means : [105.08, 110.87, 101.82, 50]
-        aerial_stds  : [105.08, 110.87, 101.82, 50]
-        spot_means : [105.08, 110.87, 101.82, 50]
-        spot_stds  : [105.08, 110.87, 101.82, 50]
-        elev_means : [105.08, 110.87, 101.82, 50]
-        elev_stds  : [105.08, 110.87, 101.82, 50]
+
+        aerial_means : [105.66, 111.35, 102.18, 106.59]
+        aerial_stds  : [52.23, 45.62, 44.29, 39.78]
+
+        aerial_rlt_means : [125.92]
+        aerial_rlt_stds  : [38.45]
+
+        spot_means : [433.26, 508.75, 467.77, 1137.03]
+        spot_stds  : [312.76, 284.61, 226.02, 543.11]
+
+        elev_means : [311.06, 307.06]
+        elev_stds  : [537.55, 537.82]
+
 
 models:
     
