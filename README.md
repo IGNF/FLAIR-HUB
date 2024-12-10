@@ -19,10 +19,11 @@
 - ✅ Add normalization for all modalities : config + dataloader
 - [ ] Test LPIS labels
 - [ ] MetadataMLP to extract self.list_x.shape[-2:]
-- [ ] MNT/MNS : check if the 0/1 normalisation works
+- [ ] MNT/MNS : check if the 0/1 normalisation works => appliquer la même normaloisation celle du MNS
 - ✅ remove any 'area_id'
 - [ ] Check labels starting at 0/1
-- ✅ Conflict channels SEN / stacked dates 
+- ✅ Conflict channels SEN / stacked dates
+- [ ] Rajouter l'évaluation sur test FLAIR 1 et sur test FLAIR 2
 
 
 
