@@ -22,7 +22,7 @@
 - [ ] MNT/MNS : check if the 0/1 normalisation works
 - ✅ remove any 'area_id'
 - [ ] Check labels starting at 0/1
-- [ ] Conflict channels SEN / stacked dates 
+- ✅ Conflict channels SEN / stacked dates 
 
 
 
