@@ -16,7 +16,7 @@
 - ✅ Handle all aux_losses = False --> for now 1 monotemp needs to be true
 - [ ] Should class weights be defined per modality ?
 - [ ] 3 -> 2 channels : ? For now, dropping third channel
-- [ ] Add normalization for all modalities : config + dataloader
+- ✅ Add normalization for all modalities : config + dataloader
 - [ ] Test LPIS labels
 - [ ] MetadataMLP to extract self.list_x.shape[-2:]
 - [ ] MNT/MNS : check if the 0/1 normalisation works
