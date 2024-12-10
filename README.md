@@ -20,7 +20,7 @@
 - [ ] Test LPIS labels
 - [ ] MetadataMLP to extract self.list_x.shape[-2:]
 - [ ] MNT/MNS : check if the 0/1 normalisation works
-- [ ] remove any 'area_id'
+- ✅ remove any 'area_id'
 - [ ] Check labels starting at 0/1
 - [ ] Conflict channels SEN / stacked dates 
 
