@@ -22,6 +22,8 @@
 - [ ] SHould class weights be defined per modality ?
 - [ ] remove any 'area_id'
 - [ ] Check labels starting at 0/1
+- [ ] Add patience to config
+- [ ] Conflict channels SEN / stacked dates 
 
 
 
