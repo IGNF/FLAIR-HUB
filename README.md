@@ -14,7 +14,7 @@
 - ❌ Align : Transformer for the fusion <code style="color : name_color">If really willing, please provide working code</code>
 - ✅ ~~Change first layer of decoder for concat featmaps or small MLP~~ <code style="color : name_color">learnable conv2d and dedicated upernet for fused features decoder if at least 1 monotemp, if only UTAE : stack, mean</code>
 - ✅ Handle all aux_losses = False --> for now 1 monotemp needs to be true
-- [ ] Should class weights be defined per modality ?
+- [ ] Should class weights be defined per modality ? => oui
 - [ ] 3 -> 2 channels : ? For now, dropping third channel
 - ✅ Add normalization for all modalities : config + dataloader
 - [ ] Test LPIS labels
@@ -25,6 +25,7 @@
 - ✅ Conflict channels SEN / stacked dates
 - [ ] Rajouter l'évaluation sur test FLAIR 1 et sur test FLAIR 2
 - [ ] Permettre de pouvoir faire un entrainement sur les subsets FLAIR 1 train et FLAIR 2 train
+- [ ] Permettre de faire k-fold sur aerial : reprendre celui de COSIA
 
 
 
