@@ -86,8 +86,8 @@ modalities:
         spot_means : [433.26, 508.75, 467.77, 1137.03]
         spot_stds  : [312.76, 284.61, 226.02, 543.11]
 
-        elev_means : [311.06, 307.06]
-        elev_stds  : [537.55, 537.82]
+        elev_means : [311.06, 311.06] # use same for both DSM/DTM to allow keeping differences of elevation
+        elev_stds  : [537.55, 537.55]
 
 
 models:
@@ -118,25 +118,26 @@ models:
 
 classes: 
 
-    1: [1, 'building']
-    2: [1, 'pervious surface']
-    3: [1, 'impervious surface']
-    4: [1, 'bare soil']
-    5: [1, 'water']
-    6: [1, 'coniferous']
-    7: [1, 'deciduous']
-    8: [1, 'brushwood']
-    9: [1, 'vineyard']
-    10: [1, 'herbaceous vegetation']
-    11: [1, 'agricultural land']
-    12: [1, 'plowed land']
-    13: [1, 'swimming_pool']
-    14: [1, 'snow']
-    15: [0, 'clear cut']
-    16: [0, 'mixed']
-    17: [0, 'ligneous']
-    18: [1, 'greenhouse']
-    19: [0, 'other']
+    0  :   [1, 'building']
+    1  :   [1, 'greenhouse']
+    2  :   [1, 'swimming_pool']
+    3  :   [1, 'impervious surface']
+    4  :   [1, 'pervious surface']
+    5  :   [1, 'bare soil']
+    6  :   [1, 'water']
+    7  :   [1, 'snow']
+    8  :   [1, 'herbaceous vegetation']
+    9  :   [1, 'agricultural land']
+    10 :   [1, 'plowed land']
+    11 :   [1, 'vineyard']
+    12 :   [1, 'deciduous']
+    13 :   [1, 'coniferous']
+    14 :   [1, 'brushwood']
+    15 :   [0, 'clear cut']
+    16 :   [0, 'ligneous']
+    17 :   [0, 'mixed']
+    18 :   [0, 'undefined']
+
 
 hyperparams:
 
@@ -154,7 +155,8 @@ hyperparams:
 
 saving:   
 
-    codecarbon: True
+    codecarbon: False
+    
     ckpt_save_also_last: True
     ckpt_verbose: False
     ckpt_weights_only: False
