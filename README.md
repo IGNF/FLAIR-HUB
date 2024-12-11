@@ -18,10 +18,10 @@
 - [ ] 3 -> 2 channels : ? For now, dropping third channel
 - ✅ Add normalization for all modalities : config + dataloader
 - [ ] Test LPIS labels
-- [ ] MetadataMLP to extract self.list_x.shape[-2:]
+- ❌ MetadataMLP to extract self.list_x.shape[-2:] : <code style="color : name_color">flemme.</code>
 - [ ] MNT/MNS : check if the 0/1 normalisation works => appliquer la même normaloisation celle du MNS
 - ✅ remove any 'area_id'
-- [ ] Check labels starting at 0/1
+- ✅ Check labels starting at 0/1
 - ✅ Conflict channels SEN / stacked dates
 - [ ] Rajouter l'évaluation sur test FLAIR 1 et sur test FLAIR 2
 - [ ] Permettre de pouvoir faire un entrainement sur les subsets FLAIR 1 train et FLAIR 2 train
