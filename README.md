@@ -19,7 +19,7 @@
 - ✅ Add normalization for all modalities : config + dataloader
 - [ ] Test LPIS labels
 - ❌ MetadataMLP to extract self.list_x.shape[-2:] : <code style="color : name_color">flemme.</code>
-- [ ] MNT/MNS : check if the 0/1 normalisation works => appliquer la même normaloisation celle du MNS
+- ✅ MNT/MNS : check if the 0/1 normalisation works => appliquer la même normaloisation celle du MNS <code style="color : name_color">mis 2 fois la même valeur pour éviter les if/elif dans les fonctions..</code>
 - ✅ remove any 'area_id'
 - ✅ Check labels starting at 0/1
 - ✅ Conflict channels SEN / stacked dates
