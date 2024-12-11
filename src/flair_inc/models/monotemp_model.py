@@ -105,7 +105,9 @@ class FLAIR_MonoTemporal(torch.nn.Module):
                 if num_channels == 1:  # Average the input RGB channels
                     new_conv1.weight.data[:, 0, :, :] = conv1.weight.data.sum(dim=1)
                 elif num_channels == 2:  # Drop the third channel (if present)
-                    new_conv1.weight.data[:, :2, :, :] = conv1.weight.data[:, :2, :, :]
+                    summed_weights = conv1.weight.data.sum(dim=1)  
+                    new_conv1.weight.data[:, 0, :, :] = summed_weights  
+                    new_conv1.weight.data[:, 1, :, :] = summed_weights                
                 else:
                     new_conv1.weight.data[:, :num_channels, :, :] = conv1.weight.data[:, :num_channels, :, :]
             else:  # Adding channels
