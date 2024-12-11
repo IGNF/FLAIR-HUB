@@ -15,7 +15,7 @@
 - ✅ ~~Change first layer of decoder for concat featmaps or small MLP~~ <code style="color : name_color">learnable conv2d and dedicated upernet for fused features decoder if at least 1 monotemp, if only UTAE : stack, mean</code>
 - ✅ Handle all aux_losses = False --> for now 1 monotemp needs to be true
 - [ ] Should class weights be defined per modality ? => oui
-- [ ] 3 -> 2 channels : ? For now, dropping third channel
+- ✅ 3 -> 2 channels : ? For now, dropping third channel
 - ✅ Add normalization for all modalities : config + dataloader
 - [ ] Test LPIS labels
 - ❌ MetadataMLP to extract self.list_x.shape[-2:] : <code style="color : name_color">flemme.</code>
