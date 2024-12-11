@@ -163,9 +163,16 @@ class flair_dataset(Dataset):
         self.channels_sentinel1 = config['modalities']['inputs_channels']['sentinel1']
 
         # Normalization parameters
-        self.aerial_norm_type = config['modalities']['normalization']['norm_type']
+        self.norm_type = config['modalities']['normalization']['norm_type']
+        
         self.aerial_means = config['modalities']['normalization']['aerial_means']
         self.aerial_stds = config['modalities']['normalization']['aerial_stds']
+        self.aerial_rlt_means = config['modalities']['normalization']['aerial_means']
+        self.aerial_rlt_stds = config['modalities']['normalization']['aerial_stds']
+        self.spot_means = config['modalities']['normalization']['spot_means']
+        self.spot_stds = config['modalities']['normalization']['spot_stds']
+        self.elev_means = config['modalities']['normalization']['elev_means']
+        self.elev_stds = config['modalities']['normalization']['elev_stds']     
 
         # Class information
         self.num_classes = len(config['classes'])
@@ -390,21 +397,23 @@ class flair_dataset(Dataset):
 
         if self.list_patch_aerial.size > 0:
             sample['AERIAL_RGBI'] = self.read_patch(self.list_patch_aerial[index], channels=self.channels_aerial)
-            ## Norm - TODO : ADD FOR OTHERS ? 
             sample['AERIAL_RGBI'] = norm(sample['AERIAL_RGBI'], norm_type=self.aerial_norm_type, means=self.aerial_means, stds=self.aerial_stds)
             
         if self.list_patch_aerial_rlt.size > 0:
             sample['AERIAL-RLT_PAN'] = self.read_patch(self.list_patch_aerial_rlt[index])
-        
+            sample['AERIAL-RLT_PAN'] = norm(sample['AERIAL-RLT_PAN'], norm_type=self.norm_type, means=self.aerial_rlt_means, stds=self.aerial_rlt_stds)
+   
         if self.list_patch_elev.size > 0:
             elev_data = self.read_patch(self.list_patch_elev[index])
             if self.config['modalities']['pre_processings']['calc_elevation']:
                 sample['DEM_ELEV'] = self.calc_elevation(elev_data)
             else:
                 sample['DEM_ELEV'] = elev_data
+            sample['DEM_ELEV'] = norm(sample['DEM_ELEV'], norm_type=self.norm_type, means=self.elev_means, stds=self.elev_stds)
         
         if self.list_patch_spot.size > 0:
             sample['SPOT_RGBI'] = self.read_patch(self.list_patch_spot[index], channels=self.channels_spot)
+            sample['SPOT_RGBI'] = norm(sample['SPOT_RGBI'], norm_type=self.norm_type, means=self.spot_means, stds=self.spot_stds)
         
         if self.list_patch_sentinel2.size > 0:
             sentinel2_data = self.read_patch(self.list_patch_sentinel2[index])
@@ -467,7 +476,7 @@ class flair_dataset(Dataset):
             label_data = self.read_patch(self.list_patch_label[index], channels=[1])
             label_data = label_data-1
             sample['LABELS'] = self.reshape_label_ohe(label_data, self.num_classes)
-            
+        
         if self.use_augmentations is not None:
             for key, value in sample.items():
                 if len(value) == 0:
