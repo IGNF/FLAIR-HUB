@@ -94,7 +94,8 @@ class FLAIR_TimeTexture(nn.Module):
             self.arch = config['models']['monotemp_model']['arch'].split('_')[0]
 
         ### OUT CHANNELS LOGITS 
-        self.n_classes = len(config['classes'])
+        if config['labels'][0] == 'AERIAL_LABEL-COSIA':
+            self.n_classes = len(config['labels_configs']['AERIAL_LABEL-COSIA']['value_name'])
 
         ### MODELS
         self.models = nn.ModuleDict({

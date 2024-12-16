@@ -1,5 +1,5 @@
 import yaml
-import sys
+import os, sys
 import shutil
 import pandas as pd
 
@@ -8,9 +8,21 @@ from typing import Union
 from pytorch_lightning.utilities.rank_zero import rank_zero_only  
 
 
-def read_config(file_path):
-    with open(file_path, "r") as f:
-        return yaml.safe_load(f)
+def read_configs(folder_path):
+    combined_config = {}
+    for file_name in os.listdir(folder_path):
+        if file_name.endswith('.yaml'):
+            file_path = os.path.join(folder_path, file_name)
+            with open(file_path, "r") as f:
+                config = yaml.safe_load(f)
+                combined_config.update(config)
+
+    if combined_config['labels'][0] == 'AERIAL_LABEL-COSIA':
+        del combined_config['labels_configs']['LPIS']
+    elif combined_config['labels'][0] == 'LPIS':
+        del combined_config['labels_configs']['AERIAL_LABEL-COSIA']        
+
+    return combined_config
      
 
 def setup_environment(args):
@@ -18,7 +30,7 @@ def setup_environment(args):
     This function reads the configuration file, creates the output directory, 
     and sets up the logger.
     """
-    config = read_config(args.conf)
+    config = read_configs(args.conf_folder)
     out_dir = Path(config['paths']["out_folder"], config['paths']["out_model_name"])
     out_dir.mkdir(parents=True, exist_ok=True)
     return config, out_dir 
@@ -50,7 +62,7 @@ def copy_csv_and_config(config, out_dir, args):
         shutil.copy(config["paths"]["train_csv"], csv_copy_dir)
         shutil.copy(config["paths"]["val_csv"], csv_copy_dir)
     if config["tasks"]["predict"]: shutil.copy(config["paths"]["test_csv"], csv_copy_dir)
-    shutil.copy(args.conf, csv_copy_dir)
+    shutil.copytree(args.conf_folder, csv_copy_dir, dirs_exist_ok=True)
 
 
 @rank_zero_only

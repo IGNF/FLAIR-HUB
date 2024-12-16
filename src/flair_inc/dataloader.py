@@ -135,6 +135,7 @@ class flair_dataset(Dataset):
         self.list_patch_sentinel2msk = np.array(dict_paths["SENTINEL2_MSK-SC"])
         self.list_patch_sentinel1asc = np.array(dict_paths["SENTINEL1-ASC_TS"])
         self.list_patch_sentinel1desc = np.array(dict_paths["SENTINEL1-DESC_TS"])
+        
         self.list_patch_label = np.array(dict_paths["LABELS"])
 
         # Date information
@@ -175,7 +176,7 @@ class flair_dataset(Dataset):
         self.elev_stds = config['modalities']['normalization']['elev_stds']     
 
         # Class information
-        self.num_classes = len(config['classes'])
+        self.num_classes = len(config['labels_configs'][config['labels'][0]]['value_name']) #TODO MULTITASK
 
 
 
@@ -397,7 +398,7 @@ class flair_dataset(Dataset):
 
         if self.list_patch_aerial.size > 0:
             sample['AERIAL_RGBI'] = self.read_patch(self.list_patch_aerial[index], channels=self.channels_aerial)
-            sample['AERIAL_RGBI'] = norm(sample['AERIAL_RGBI'], norm_type=self.aerial_norm_type, means=self.aerial_means, stds=self.aerial_stds)
+            sample['AERIAL_RGBI'] = norm(sample['AERIAL_RGBI'], norm_type=self.norm_type, means=self.aerial_means, stds=self.aerial_stds)
             
         if self.list_patch_aerial_rlt.size > 0:
             sample['AERIAL-RLT_PAN'] = self.read_patch(self.list_patch_aerial_rlt[index])
@@ -474,7 +475,7 @@ class flair_dataset(Dataset):
 
         if self.list_patch_label.size > 0:
             label_data = self.read_patch(self.list_patch_label[index], channels=[1])
-            label_data = label_data-1
+            label_data = label_data
             sample['LABELS'] = self.reshape_label_ohe(label_data, self.num_classes)
         
         if self.use_augmentations is not None:

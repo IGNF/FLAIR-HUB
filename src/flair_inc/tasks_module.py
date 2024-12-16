@@ -3,7 +3,7 @@ import pytorch_lightning as pl
 
 from torchmetrics.classification import MulticlassJaccardIndex
 from torchmetrics.aggregation import MeanMetric
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
 
 
 class SegmentationTask(pl.LightningModule):
@@ -11,7 +11,7 @@ class SegmentationTask(pl.LightningModule):
         self,
         model,
         config: Dict[str, Any],
-        class_infos: dict,
+        class_weights: Optional[List] = None,
         criterion=None,
         optimizer=None,
         use_metadata: bool = False,
@@ -36,9 +36,9 @@ class SegmentationTask(pl.LightningModule):
         self.scheduler = scheduler
         self.use_metadata = use_metadata
 
-        self.num_classes = len(class_infos)
-        self.class_names = [class_infos[i][1] for i in class_infos]
-        self.class_weights = [class_infos[i][0] for i in class_infos]
+        self.class_names = list(config['labels_configs'][config['labels'][0]]['value_name'].values()) #TODO MULTITASK
+        self.num_classes = len(self.class_names)
+        self.class_weights = class_weights
 
         self.train_metrics = MulticlassJaccardIndex(
             num_classes=self.num_classes, average='weighted'
@@ -99,7 +99,7 @@ class SegmentationTask(pl.LightningModule):
         targets = torch.argmax(targets, dim=1)
 
         loss_sum = 0
-        loss_sum += self.criterion['loss_main'](dict_logits['FUSED'], targets)
+        loss_sum += self.criterion['AERIAL_LABEL-COSIA'](dict_logits['FUSED'], targets)
         for mod in self.mod_auxloss_on:
             if mod in dict_logits:
                 loss_sum += self.criterion[mod](dict_logits[mod], targets)*self.aux_loss_weight    

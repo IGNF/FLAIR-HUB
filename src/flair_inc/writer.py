@@ -133,9 +133,9 @@ class PredictionWriter(BasePredictionWriter):
 
         # Accumulate confusion matrices
         for pred, gt_mask in zip(preds, filenames):
-            target = np.array(Image.open(gt_mask)) - 1
+            target = np.array(Image.open(gt_mask))
             confmat = confusion_matrix(
-                target.flatten(), pred.flatten(), labels=list(range(len(self.config["classes"])))
+                target.flatten(), pred.flatten(), labels=list(range(len(self.config['labels_configs']['AERIAL_LABEL-COSIA']['value_name'])))
             )
             if self.accumulated_confmat is None:
                 self.accumulated_confmat = confmat
@@ -164,7 +164,12 @@ class PredictionWriter(BasePredictionWriter):
             return
 
         # Calculate metrics
-        weights = np.array([self.config["classes"][i][0] for i in self.config["classes"]])
+        weights = [self.config['labels_configs']['AERIAL_LABEL-COSIA']['value_weights']['default']] * len(self.config['labels_configs']['AERIAL_LABEL-COSIA']['value_name'])
+        for key, value in self.config['labels_configs']['AERIAL_LABEL-COSIA']['value_weights']['default_exceptions'].items():
+            weights[key] = value
+        weights = np.array(weights)
+
+        used_classes = np.where(weights != 0)[0]
         unused_classes = np.where(weights == 0)[0]
         confmat_cleaned = np.delete(self.accumulated_confmat, unused_classes, axis=0)  # Remove rows
         confmat_cleaned = np.delete(confmat_cleaned, unused_classes, axis=1)  # Remove columns
@@ -178,7 +183,7 @@ class PredictionWriter(BasePredictionWriter):
         metrics = {
             'Avg_metrics_name': ['mIoU', 'Overall Accuracy', 'Fscore', 'Precision', 'Recall'],
             'Avg_metrics': [avg_ious, ovr_acc, avg_fscore, avg_precision, avg_recall],
-            'classes': list(np.array([self.config["classes"][i][1] for i in self.config["classes"]])[np.nonzero(weights)[0]]),
+            'classes': [i for u,i in enumerate(np.array(list(self.config['labels_configs']['AERIAL_LABEL-COSIA']['value_name'].values()))) if u not in unused_classes],
             'per_class_iou': list(per_c_ious),
             'per_class_fscore': list(per_c_fscore),
             'per_class_precision': list(per_c_precision),
@@ -198,8 +203,11 @@ class PredictionWriter(BasePredictionWriter):
         print('-' * 90 + '\n\n')
 
         # Separate classes into used and unused based on weight
-        used_classes = {k: v for k, v in self.config["classes"].items() if v[0] != 0}
-        unused_classes = {k: v for k, v in self.config["classes"].items() if v[0] == 0}
+        dict_used_classes = {k: v for v, k in zip(weights[used_classes], np.array(list(self.config['labels_configs']['AERIAL_LABEL-COSIA']['value_name'].values()))[used_classes])}
+        dict_unused_classes = {k: v for v, k in zip(weights[unused_classes], np.array(list(self.config['labels_configs']['AERIAL_LABEL-COSIA']['value_name'].values()))[unused_classes])}
+
+
+
 
         def print_class_metrics(class_dict, metrics_available=True):
             """
@@ -208,8 +216,7 @@ class PredictionWriter(BasePredictionWriter):
                 class_dict (dict): Dictionary of class metrics.
                 metrics_available (bool): Flag to indicate if metrics are available.
             """
-            for class_index, class_info in class_dict.items():
-                class_weight, class_name = class_info
+            for class_name, class_weight in class_dict.items():
                 if metrics_available:
                     i = metrics['classes'].index(class_name)  # Get the index of the class in the metrics
                     print("{:<25} {:<15} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f}".format(
@@ -221,11 +228,11 @@ class PredictionWriter(BasePredictionWriter):
 
         print("{:<25} {:<15} {:<10} {:<10} {:<10} {:<10}".format('Class', 'Weight', 'IoU', 'F-score', 'Precision', 'Recall'))
         print('-' * 65)
-        print_class_metrics(used_classes)
+        print_class_metrics(dict_used_classes)
         print("\nDiscarded classes:")
         print("{:<25} {:<15}".format('Class', 'Weight'))
         print('-' * 65)
-        print_class_metrics(unused_classes, metrics_available=False)
+        print_class_metrics(dict_unused_classes, metrics_available=False)
         print('\n\n')
 
 

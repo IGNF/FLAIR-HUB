@@ -45,7 +45,7 @@ def get_paths(config: Dict[str, Any], split: str = 'train') -> Dict:
     for modality, is_active in config['modalities']['inputs'].items():
         if is_active == True and modality in paths.columns:
             dict_paths[modality] = paths[modality].tolist()
-    dict_paths['LABELS'] = paths[config['modalities']['labels']].tolist()
+    dict_paths['LABELS'] = paths[config['labels'][0]].tolist() #TODO ADD MULTITASK
 
     if config['modalities']['inputs']['SENTINEL2_TS']:
         dict_paths['SENTINEL2_MSK-SC'] = paths['SENTINEL2_MSK-SC'].tolist()
@@ -66,7 +66,7 @@ def prepare_sentinel_dates(config: Dict[str, Any], file_path: str) -> Dict:
 
     dict_dates = {}
     for _, row in gdf.iterrows():
-        area_id = row['area_id']
+        area_id = row['zone_id']
         acquisition_dates = json.loads(row['acquisition_dates'])
         
         dates_array = []

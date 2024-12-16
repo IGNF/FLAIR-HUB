@@ -20,7 +20,7 @@ from flair_inc.utils.utils import setup_environment, Logger, copy_csv_and_config
 from codecarbon import OfflineEmissionsTracker
 
 argParser = argparse.ArgumentParser()
-argParser.add_argument("--conf", help="Path to the .yaml config file", required=True)
+argParser.add_argument("--conf_folder", help="Path to the .yaml config file", required=True)
 
    
 
@@ -188,7 +188,7 @@ def main():
     args = argParser.parse_args()
     config, out_dir = setup_environment(args)
 
-    if config['codecarbon']:
+    if config['saving']['codecarbon']:
         node_id = os.getenv("SLURM_NODEID", "0") 
         output_emission_dir = Path(out_dir) / f"node_{node_id}_emissions"
         output_emission_dir.mkdir(parents=True, exist_ok=True)
@@ -230,7 +230,7 @@ def main():
         out_dir_predict.mkdir(parents=True, exist_ok=True)
         predict_stage(config, dm, out_dir_predict, trained_state_dict)
 
-    if config['codecarbon']:
+    if config['saving']['codecarbon']:
         tracker.stop()
         emission_tracking_summary(out_dir)       
 

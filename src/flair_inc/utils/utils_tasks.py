@@ -63,21 +63,27 @@ def get_segmentation_module(config, stage: str = 'train'):
                    
     model = FLAIR_TimeTexture(config)
 
-    aux_losses = nn.ModuleDict({'loss_main' : None})
-
     if stage == 'train':
-        if config['hyperparams']["use_class_weights"]:
-            with torch.no_grad():
-                class_weights = torch.FloatTensor([config["classes"][i][0] for i in config["classes"]])
-        else:
-            class_weights = None
 
-        aux_losses['loss_main'] = nn.CrossEntropyLoss(weight=class_weights)
+        losses = nn.ModuleDict({})
 
-        for modality in config['modalities']['aux_loss']:
-            if config['modalities']['aux_loss'][modality]:
-                aux_losses[modality] = nn.CrossEntropyLoss(weight=class_weights)   
+        if 'AERIAL_LABEL-COSIA' in config['labels']: #TODO add multitask losses
 
+            default_w = torch.FloatTensor([config['labels_configs']['AERIAL_LABEL-COSIA']['value_weights']['default']] * len(config['labels_configs']['AERIAL_LABEL-COSIA']['value_name']))
+            for key, value in config['labels_configs']['AERIAL_LABEL-COSIA']['value_weights']['default_exceptions'].items():
+                default_w[key] = value
+            losses['AERIAL_LABEL-COSIA'] = nn.CrossEntropyLoss(weight=default_w)
+
+            for modality, is_active in config['modalities']['aux_loss'].items():
+                if is_active:
+                    modality_weights = default_w.clone()
+                    modality_exceptions = config['labels_configs']['AERIAL_LABEL-COSIA']['value_weights']['per_modality_exceptions'].get(modality)
+                    if modality_exceptions:
+                        for key, value in modality_exceptions.items():
+                            modality_weights[key] = value
+                    losses[modality] = nn.CrossEntropyLoss(weight=modality_weights)
+
+ 
         optimizer = torch.optim.SGD(model.parameters(), lr=config['hyperparams']["learning_rate"])
 
         scheduler = ReduceLROnPlateau(
@@ -92,8 +98,8 @@ def get_segmentation_module(config, stage: str = 'train'):
         seg_module = SegmentationTask(
             model=model,
             config=config,
-            class_infos=config["classes"],
-            criterion=aux_losses,
+            class_weights=default_w,
+            criterion=losses,
             optimizer=optimizer,
             scheduler=scheduler,
             use_metadata=config['modalities']['pre_processings']["use_metadata"],
@@ -103,7 +109,6 @@ def get_segmentation_module(config, stage: str = 'train'):
         seg_module = SegmentationTask(
             model=model,
             config=config,
-            class_infos=config["classes"],
             use_metadata=config['modalities']['pre_processings']["use_metadata"],
         )        
 
