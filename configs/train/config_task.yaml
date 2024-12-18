@@ -1,0 +1,50 @@
+paths :   
+
+    out_folder: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/results/'
+    out_model_name: 'TEST_MULTIWEIGHTS'
+    train_csv: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/split_csv/toy/TRAIN_FLAIR-INC_TOY.csv'
+    val_csv: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/split_csv/toy/VALID_FLAIR-INC_TOY.csv'
+    test_csv: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/split_csv/toy/TEST_FLAIR-INC_TOY.csv'
+    global_mtd_folder: 'C:/Users/agari/Desktop/DEVS-FLAIR-INC/data/FLAIR-INC_TOY/GLOBAL_ALL_MTD/'
+    ckpt_model_path: ''
+    path_metadata_aerial: '../flair_aerial_metadata.json'
+
+
+tasks: 
+
+    train: True
+    train_tasks: 
+        init_weights_only_from_ckpt: False
+        resume_training_from_ckpt: False
+
+    predict: True
+    write_files: True
+    georeferencing_output: True
+
+
+hyperparams:
+
+    num_epochs: 2
+    batch_size: 2
+    seed: 2025
+    learning_rate: 0.02
+
+    accelerator: 'gpu'
+    num_nodes: 1
+    gpus_per_node: 1
+    strategy: 'auto'
+    num_workers: 0
+
+saving:   
+
+    codecarbon: False
+    
+    ckpt_save_also_last: True
+    ckpt_verbose: False
+    ckpt_weights_only: False
+    ckpt_monitor: 'val_loss'
+    ckpt_monitor_mode: 'min'
+    ckpt_earlystopping_patience: 30
+    cp_csv_and_conf_to_output: True
+    enable_progress_bar: True
+    progress_rate: 10
