@@ -27,7 +27,7 @@
 - [ ] Permettre de pouvoir faire un entrainement sur les subsets FLAIR 1 train et FLAIR 2 train : Sébastien
 - [ ] Permettre de faire k-fold sur aerial : reprendre celui de COSIA : Sébastien
 - [ ] Rajouter loss Lovasz et autre scheduler : si on arrive pas à faire mieux
-- [ ] Faire une exp sur le RPG (attention de la nomenclature de Nicolas D) 
+- [ ] Faire une exp sur le RPG (besoin de la nomenclature de Nicolas D) 
 - [ ] Implémenter l'entrainement multi-tâches : Anatol
 - [ ] Rajouter le Warmimg : Anatol
 - [ ] AdamW comme optimizer : Anatol
