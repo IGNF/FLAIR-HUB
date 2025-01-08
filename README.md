@@ -31,8 +31,19 @@
 - [ ] Implémenter l'entrainement multi-tâches : Anatol
 - [ ] Rajouter le Warmimg : Anatol
 - [ ] AdamW comme optimizer : Anatol
+- [ ] Implémenter une option pour avoir MNS et MNS - MNT
+- [ ] Mail à HuggingFace.dataset.co
 
-
+# Training to do :
+- [ ] Aerial Only
+- [ ] Aerial + Elevation
+- [ ] Aerial + Elevation + SPOT
+- [ ] Aerial + S2
+- [ ] Aerial + S1
+- [ ] Aerial + S1 + S2
+- [ ] 
+- [ ] Aerial + Elevation + SPOT + S1 + S2 
+- [ ] Aerial k fold 
 
 <div align="center">
   
