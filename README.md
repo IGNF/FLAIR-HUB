@@ -34,16 +34,46 @@
 - [ ] Implémenter une option pour avoir MNS et MNS - MNT
 - [ ] Mail à HuggingFace.dataset.co
 
-# Training to do :
+# Training to do CoSIA :
 - [ ] Aerial Only
 - [ ] Aerial + Elevation
 - [ ] Aerial + Elevation + SPOT
 - [ ] Aerial + S2
 - [ ] Aerial + S1
 - [ ] Aerial + S1 + S2
-- [ ] 
-- [ ] Aerial + Elevation + SPOT + S1 + S2 
-- [ ] Aerial k fold 
+
+- [ ] S2
+- [ ] S1
+- [ ] SPOT
+- [ ] historique
+- [ ] ELEV
+      
+- [ ] Aerial + historique 
+- [ ] Aerial + Elevation + SPOT + S1 + S2
+- [ ] Aerial + Elevation + SPOT + S1 + S2 + historique 
+- [ ] Aerial k fold
+
+# Training to do LPIS (43) :
+- [ ] S1
+- [ ] S2
+- [ ] S1+S2
+- [ ] S1+S2+SPOT
+
+- [ ] Aerial
+- [ ] Aerial + S2
+- [ ] Aerial + S2 + SPOT
+- [ ] Aerial + S2 + S1
+- [ ] Aerial + SPOT
+
+- [ ] : best modalities -> 18 / 73
+
+
+
+# Training to do Multitâche:
+- [ ] : 2 best previous
+
+
+
 
 <div align="center">
   
