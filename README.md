@@ -30,8 +30,8 @@
 - [ ] Faire une exp sur le RPG (besoin de la nomenclature de Nicolas D) 
 - [ ] Implémenter l'entrainement multi-tâches : Anatol
 - [ ] Rajouter le Warmimg : Anatol
-- [ ] AdamW comme optimizer : Anatol
-- [ ] Implémenter une option pour avoir MNS et MNS - MNT
+- ✅ AdamW comme optimizer : Anatol
+- ✅ Implémenter une option pour avoir MNS et MNS - MNT
 - [ ] Mail à HuggingFace.dataset.co
 
 # Training to do CoSIA :
