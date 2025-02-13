@@ -77,8 +77,15 @@
 # A faire pour le data paper :
 - [ ] Related work Agricol : Nicolas D.
 - [ ] Related work LC et Multimodal : Nicolas G.
-- [ ] Figure : proportion et nombre de pixels COSIA : Seb
+- [ ] Figure : proportion et nombre de pixels COSIA : Seb à mettre dans l'overleaf
 - [ ]  Figure : proportion et nombre de pixels LIPS : Nicolas D.
+- [ ]  Figure : Couverture Nuageuse par domaine : Anatol
+- [ ]  Figure : Nombre d'acquisition S2 bufferisé (deux version nombre d'acquisiton et nombre de date valide) : Anatol 
+- [ ]  Figure : Nombre d'acquisition S1 bufferisé : Anatol
+- [ ] Tableau récapitulatif dess modalités (# channels sources etc) : Seb
+- [ ] Ilustration inférence
+- [ ] Figure de l'archi multibranches : Anatol
+- [ ] Figure temporelles sur 5 patchs : trajectoires de S1 et S2 : Seb 
 
 <div align="center">
   
