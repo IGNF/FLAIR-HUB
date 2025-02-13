@@ -73,7 +73,11 @@
 - [ ] : 2 best previous
 
 
-
+# A faire pour le data paper :
+- [ ] Related work Agricol : Nicolas D.
+- [ ] Related work LC et Multimodal : Nicolas G.
+- [ ] Figure : proportion et nombre de pixels COSIA : Seb
+- [ ]  Figure : proportion et nombre de pixels LIPS : Nicolas D.
 
 <div align="center">
   
