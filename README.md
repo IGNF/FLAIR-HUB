@@ -23,8 +23,8 @@
 - ✅ remove any 'area_id'
 - ✅ Check labels starting at 0/1
 - ✅ Conflict channels SEN / stacked dates
-- [ ] Rajouter l'évaluation sur test FLAIR 1 et sur test FLAIR 2 : Sébastien
-- [ ] Permettre de pouvoir faire un entrainement sur les subsets FLAIR 1 train et FLAIR 2 train : Sébastien
+- ✅ Rajouter l'évaluation sur test FLAIR 1 et sur test FLAIR 2 : Sébastien
+- [ ] Permettre de pouvoir faire un entrainement sur les subsets FLAIR 1 train et FLAIR 2 train : à distribuer sur le github 
 - [ ] Permettre de faire k-fold sur aerial : reprendre celui de COSIA : Sébastien
 - [ ] Rajouter loss Lovasz et autre scheduler : si on arrive pas à faire mieux
 - [ ] Faire une exp sur le RPG (besoin de la nomenclature de Nicolas D) 
@@ -32,7 +32,8 @@
 - [ ] Rajouter le Warmimg : Anatol
 - ✅ AdamW comme optimizer : Anatol
 - ✅ Implémenter une option pour avoir MNS et MNS - MNT
-- [ ] Mail à HuggingFace.dataset.co
+- [ ] Mail à HuggingFace.dataset.co : Anatol
+- [ ] Mail à JeanZay 
 
 # Training to do CoSIA :
 - [ ] Aerial Only
