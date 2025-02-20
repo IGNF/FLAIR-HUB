@@ -1,12 +1,12 @@
 paths :   
 
-    out_folder: 'C:/Users/agari/Desktop/DATA-RESULTS-FLAIR-INC/results/'
-    out_model_name: 'test_resnetunet_aerial'
+    out_folder: './results/'
+    out_model_name: 'test_base'
 
-    train_csv: 'C:/Users/agari/Desktop/DATA-RESULTS-FLAIR-INC/data/split_csv/toy/TRAIN_FLAIR-INC_TOY.csv'
-    val_csv: 'C:/Users/agari/Desktop/DATA-RESULTS-FLAIR-INC/data/split_csv/toy/VALID_FLAIR-INC_TOY.csv'
-    test_csv: 'C:/Users/agari/Desktop/DATA-RESULTS-FLAIR-INC/data/split_csv/toy/TEST_FLAIR-INC_TOY.csv'
-    global_mtd_folder: 'C:/Users/agari/Desktop/DATA-RESULTS-FLAIR-INC/data/FLAIR-INC_TOY/GLOBAL_ALL_MTD/'
+    train_csv: '../DATA-RESULTS-FLAIR-INC/data/split_csv/toy/TRAIN_FLAIR-INC_TOY.csv'
+    val_csv: '../DATA-RESULTS-FLAIR-INC/data/split_csv/toy/VALID_FLAIR-INC_TOY.csv'
+    test_csv: '../DATA-RESULTS-FLAIR-INC/data/split_csv/toy/TEST_FLAIR-INC_TOY.csv'
+    global_mtd_folder: '../DATA-RESULTS-FLAIR-INC/data/FLAIR-INC_TOY/GLOBAL_ALL_MTD/'
     ckpt_model_path: ''
 
 tasks: 
@@ -31,7 +31,7 @@ hyperparams:
     optim_betas: [0.9, 0.999]
 
     scheduler: one_cycle_lr # or reduce_on_plateau
-    warmup: 0.2 #if one_cycle_lr, [0-1]
+    warmup: 0.2 #if using one_cycle_lr. [0-1]
 
 hardware:
     accelerator: 'gpu'
