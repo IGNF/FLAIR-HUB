@@ -17,7 +17,6 @@
 - ✅ Should class weights be defined per modality ? => oui
 - ✅ 3 -> 2 channels : ? For now, dropping third channel
 - ✅ Add normalization for all modalities : config + dataloader
-- [ ] Test LPIS labels
 - ❌ MetadataMLP to extract self.list_x.shape[-2:] : <code style="color : name_color">flemme.</code>
 - ✅ MNT/MNS : check if the 0/1 normalisation works => appliquer la même normaloisation celle du MNS <code style="color : name_color">mis 2 fois la même valeur pour éviter les if/elif dans les fonctions..</code>
 - ✅ remove any 'area_id'
@@ -28,7 +27,7 @@
 - [ ] Permettre de faire k-fold sur aerial : reprendre celui de COSIA : Sébastien
 - [ ] Rajouter loss Lovasz et autre scheduler : si on arrive pas à faire mieux
 - ✅ Implémenter l'entrainement multi-tâches : Anatol
-- [ ] Rajouter le Warmimg : Anatol
+- ✅ Rajouter le Warmimg : Anatol
 - ✅ AdamW comme optimizer : Anatol
 - ✅ Implémenter une option pour avoir MNS et MNS - MNT
 - [ ] Mail à HuggingFace.dataset.co : Anatol
