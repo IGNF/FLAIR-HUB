@@ -5,11 +5,10 @@ modalities:
         AERIAL-RLT_PAN    : False
         DEM_ELEV          : False
         SPOT_RGBI         : False
-        SENTINEL2_TS      : True 
-        SENTINEL1-ASC_TS  : True
-        SENTINEL1-DESC_TS : True
+        SENTINEL2_TS      : False 
+        SENTINEL1-ASC_TS  : False
+        SENTINEL1-DESC_TS : False
         
-
     inputs_channels:
         AERIAL_RGBI       : [1,2,3,4]
         SPOT_RGBI         : [1,2,3]
@@ -18,15 +17,15 @@ modalities:
         SENTINEL1-DESC_TS : [1,2]
 
     aux_loss: 
-        AERIAL_RGBI       : True
+        AERIAL_RGBI       : False
         AERIAL-RLT_PAN    : False
         DEM_ELEV          : False
         SPOT_RGBI         : False
-        SENTINEL2_TS      : True
-        SENTINEL1-ASC_TS  : True
-        SENTINEL1-DESC_TS : True
+        SENTINEL2_TS      : False
+        SENTINEL1-ASC_TS  : False
+        SENTINEL1-DESC_TS : False
 
-    aux_loss_weight: 1.5
+    aux_loss_weight: 1.5 # factor before adding to main loss
 
     modality_dropout: # between 0 (no dropout) and 1 (complete systematic dropout)
         AERIAL_RGBI       : 0
@@ -36,7 +35,6 @@ modalities:
         SENTINEL2_TS      : 0
         SENTINEL1-ASC_TS  : 0
         SENTINEL1-DESC_TS : 0
-
 
     pre_processings: 
         filter_sentinel2: True 
@@ -49,7 +47,6 @@ modalities:
         calc_elevation_stack_dsm : True 
         use_augmentation: False
         use_metadata: False   
-
 
     normalization: 
         norm_type : custom   # possible :  custom, scaling, without

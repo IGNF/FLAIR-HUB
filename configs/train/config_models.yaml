@@ -1,11 +1,13 @@
 models: 
 
     monotemp_model: # encoder-decoder from SMP
-        #arch: 'swin_base_patch4_window12_384-upernet' 
-        arch: 'resnet34-unet' 
+
+        arch: 'swin_base_patch4_window12_384-upernet' 
+        #arch: 'resnet34-unet' 
         new_channels_init_mode: 'random' # possible :  copy_first, copy_second, copy_third, random
 
     multitemp_model: 
+    
         ref_date: '05-15' # defined for whole dataset    
         encoder_widths: [64, 64, 64, 128] # last must be equivalent to decoder_widths
         decoder_widths: [32, 32, 64, 128] # last must be equivalent to encoder_widths
