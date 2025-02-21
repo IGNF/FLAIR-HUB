@@ -298,7 +298,7 @@ class SegmentationTask(pl.LightningModule):
             scheduler = torch.optim.lr_scheduler.OneCycleLR(
                 optimizer,
                 max_lr=self.config['hyperparams']["learning_rate"],
-                total_steps=self.config['hyperparams']['steps'],
+                total_steps=self.trainer.estimated_stepping_batches,
                 pct_start=self.config['hyperparams']['warmup'],
                 cycle_momentum=False,
                 div_factor=1000,
