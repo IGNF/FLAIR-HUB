@@ -114,9 +114,6 @@ def main():
     print(dict_val.keys())
     print_recap(config, dict_train, dict_val, dict_test)
 
-    config['hyperparams']['steps'] = int(len(dict_train[config['labels'][0]]))  # TODO check
-    print('STEPS TRAIN: ', config['hyperparams']['steps'])  # TODO check
-
     # Copy relevant files for tracking
     if config['saving']["cp_csv_and_conf_to_output"]:
         copy_csv_and_config(config, out_dir, args)
