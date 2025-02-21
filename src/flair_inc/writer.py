@@ -84,12 +84,6 @@ class PredictionWriter(BasePredictionWriter):
     def calculate_metrics(self) -> None:
         """
         Compute and save metrics for each task.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
         for task, confmat in self.accumulated_confmats.items():
             if confmat is None:
@@ -99,6 +93,26 @@ class PredictionWriter(BasePredictionWriter):
             label_config = self.config["labels_configs"][task]
             class_names = label_config["value_name"]
             num_classes = len(class_names)
+
+            # Initialize default weights for all classes
+            value_weights = label_config.get("value_weights", {})
+            default_weight = value_weights.get("default", 1)
+            default_exceptions = value_weights.get("default_exceptions", {}) or {}
+            default_weights = [default_weight] * num_classes
+            for i, weight in default_exceptions.items():
+                default_weights[i] = weight
+
+            # Prepare modality weights
+            active_modalities = [mod for mod, is_active in self.config['modalities']["inputs"].items() if is_active]
+            per_modality_exceptions = value_weights.get("per_modality_exceptions", {}) or {}
+            
+            modality_weights = {}
+            for mod in active_modalities:
+                modality_weights[mod] = default_weights.copy()
+                if mod in per_modality_exceptions:
+                    if per_modality_exceptions.get(mod):  # Ensure it's not None
+                        for i, weight in per_modality_exceptions[mod].items():
+                            modality_weights[mod][i] = weight
 
             per_c_ious, avg_ious = class_IoU(confmat, num_classes)
             ovr_acc = overall_accuracy(confmat)
@@ -114,6 +128,8 @@ class PredictionWriter(BasePredictionWriter):
                 "per_class_fscore": list(per_c_fscore),
                 "per_class_precision": list(per_c_precision),
                 "per_class_recall": list(per_c_recall),
+                "per_class_default_weight": default_weights,
+                "per_class_modality_weights": modality_weights,
             }
 
             out_folder_metrics = Path(self.output_dir, "metrics", task)
@@ -122,23 +138,32 @@ class PredictionWriter(BasePredictionWriter):
             json.dump(metrics, open(out_folder_metrics / "metrics.json", "w"))
 
             print(f"\nTask: {task} - Global Metrics:")
-            print("-" * 90)
+            print("-" * (90 + 15 * len(active_modalities)))
             for metric_name, metric_value in zip(metrics["Avg_metrics_name"], metrics["Avg_metrics"]):
                 print(f"{metric_name:<20s} {metric_value:<20.4f}")
-            print("-" * 90 + "\n")
+            print("-" * (90 + 15 * len(active_modalities)) + '\n')
 
             # Print per-class metrics
-            print("{:<6} {:<25} {:<10} {:<10} {:<10} {:<10}".format("Idx", "Class", "IoU", "F-score", "Precision", "Recall"))
-            print("-" * 75)
+            header = "{:<6} {:<25} {:<10} {:<10} {:<10} {:<10}".format(
+                "Idx", "Class", "IoU", "F-score", "Precision", "Recall"
+            )
+            for mod in active_modalities:
+                header += " {:<15}".format(mod)
+            print(header)
+            print("-" * (90 + 15 * len(active_modalities)))
+
             for i, class_name in enumerate(class_names.values()):
-                print("{:<6} {:<25} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f}".format(
+                row = "{:<6} {:<25} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f}".format(
                     i,
                     class_name,
                     per_c_ious[i],
                     per_c_fscore[i],
                     per_c_precision[i],
-                    per_c_recall[i]
-                ))
+                    per_c_recall[i],
+                )
+                for mod in active_modalities:
+                    row += " {:<15}".format(modality_weights[mod][i])
+                print(row)
             print("\n")
 
     def on_predict_epoch_end(self, trainer, pl_module) -> None:
