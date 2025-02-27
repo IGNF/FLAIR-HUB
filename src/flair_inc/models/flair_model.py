@@ -162,21 +162,22 @@ class FLAIR_INC_Model(nn.Module):
         
         # Auxiliary Decoders
         self.aux_decoders = nn.ModuleDict()
-        for mod, task in self.aux_losses.items():
-            self.aux_decoders[f'{mod}__{task}'] = (
-                FLAIR_Monotemp(
-                    config,
-                    channels=1,
-                    classes=len(config['labels_configs'][task]['value_name']),
-                    return_type='decoder',
+        for task in config['labels']:
+            for mod in self.aux_losses.keys():
+                self.aux_decoders[f'{mod}__{task}'] = (
+                    FLAIR_Monotemp(
+                        config,
+                        channels=1,
+                        classes=len(config['labels_configs'][task]['value_name']),
+                        return_type='decoder',
+                    )
+                    if mod in self.mono_keys
+                    else nn.Conv2d(
+                        in_channels=self.task_nclasses,
+                        out_channels=len(config['labels_configs'][task]['value_name']),
+                        kernel_size=1,
+                    )
                 )
-                if mod in self.mono_keys
-                else nn.Conv2d(
-                    in_channels=self.task_nclasses,
-                    out_channels=len(config['labels_configs'][task]['value_name']),
-                    kernel_size=1,
-                )
-            )
 
         self.print_model_parameters(
             self.encoders, self.main_decoders, self.aux_decoders,
