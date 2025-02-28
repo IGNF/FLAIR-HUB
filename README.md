@@ -23,9 +23,9 @@
 - ✅ Check labels starting at 0/1
 - ✅ Conflict channels SEN / stacked dates
 - ✅ Rajouter l'évaluation sur test FLAIR 1 et sur test FLAIR 2 : Sébastien
-- [ ] Permettre de pouvoir faire un entrainement sur les subsets FLAIR 1 train et FLAIR 2 train : à distribuer sur le github 
-- [ ] Permettre de faire k-fold sur aerial : reprendre celui de COSIA : Sébastien
-- [ ] Rajouter loss Lovasz et autre scheduler : si on arrive pas à faire mieux
+- [ ] Permettre de pouvoir faire un entrainement sur les subsets FLAIR 1 train et FLAIR 2 train : à distribuer sur le github <code style="color : name_color">Via distribution CSVs.</code>
+- [ ] Permettre de faire k-fold sur aerial : reprendre celui de COSIA : Sébastien <code style="color : name_color">Via distribution CSVs.</code>
+- ❌ Rajouter loss Lovasz et autre scheduler : si on arrive pas à faire mieux <code style="color : name_color">nécessie rajout fichiers avec loss et adaptation class FLAIRLosses.</code>
 - ✅ Implémenter l'entrainement multi-tâches : Anatol
 - ✅ Rajouter le Warmimg : Anatol
 - ✅ AdamW comme optimizer : Anatol
