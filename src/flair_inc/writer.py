@@ -148,7 +148,7 @@ class PredictionWriter(BasePredictionWriter):
                 "Idx", "Class", "IoU", "F-score", "Precision", "Recall"
             )
             for mod in active_modalities:
-                header += " {:<15}".format(mod)
+                header += " {:<15}".format('w.' +mod)
             print(header)
             print("-" * (90 + 15 * len(active_modalities)))
 
