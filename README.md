@@ -85,6 +85,8 @@
 - ✅ Figure de l'archi multibranches : Anatol
 - [ ] Figure temporelles sur 5 patchs : trajectoires de S1 et S2 : Seb
 - [ ] Rajouter un petit paragaphe SSL : demander à Antoine
+- [ ] Analyse des résultats et ablations
+- [ ] Conclusion
 
 <div align="center">
   
