@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 from datetime import timedelta
 from pytorch_lightning import seed_everything
+from pytorch_lightning.utilities.rank_zero import rank_zero_only
 
 from flair_inc.tasks import train, predict
 from flair_inc.utils.utils_tasks import get_data_module, get_segmentation_module, get_input_img_sizes
@@ -79,14 +80,26 @@ def predict_stage(config, data_module, out_dir_predict, trained_state_dict=None)
     predict(config, data_module, seg_module, out_dir_predict)
 
 
+@rank_zero_only
+def welcome_message():
+    print("""
+  _____ _        _    ___ ____       _   _ _   _ ____  
+ |  ___| |      / \  |_ _|  _ \     | | | | | | | __ ) 
+ | |_  | |     / _ \  | || |_) _____| |_| | | | |  _ \ 
+ |  _| | |___ / ___ \ | ||  _ |_____|  _  | |_| | |_) |
+ |_|   |_____/_/   \_|___|_| \_\    |_| |_|\___/|____/ 
+_______________________________________________________
+
+#######################################################         
+####################  LAUNCHING #######################
+    """)
+
 def main():
     """
     Main function to set up the training and prediction process. It reads the config file, sets up the output folder, 
     initiates the training and prediction stages, and tracks emissions if enabled.
     """
-    print('######## LAUNCHING ########')
-    print('###########################')
-    print('###########################')
+    welcome_message()
 
     # Read config and create output folder
     args = argParser.parse_args()
