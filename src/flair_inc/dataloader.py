@@ -486,21 +486,67 @@ class flair_dataset(Dataset):
 
         # Apply augmentations 
         if self.use_augmentations is not None:
-            for key, value in batch_elements.items():
-                if len(value) == 0:
-                    continue
-                if len(value.shape) == 3:  # 3D
-                    batch_elements[key] = value.swapaxes(0, 2).swapaxes(0, 1)
-                elif len(value.shape) == 4:  # 4D
-                    batch_elements[key] = value.swapaxes(1, 3).swapaxes(1, 2)
+            input_keys = [k for k, v in self.config['modalities']["inputs"].items() if v]
+            label_keys = self.config["labels"]
 
-            transformed_sample = self.use_augmentations(**batch_elements)
+            alb_input = {}
+            reshape_back = {}
 
-            for key, value in transformed_sample.items():
-                if len(value.shape) == 3:  
-                    batch_elements[key] = value.swapaxes(0, 2).swapaxes(1, 2).copy()
-                elif len(value.shape) == 4: 
-                    batch_elements[key] = value.swapaxes(1, 2).swapaxes(2, 3).copy()
+            # Main image
+            main_img = batch_elements[input_keys[0]]
+            if main_img.ndim == 4:
+                T, C, H, W = main_img.shape
+                img_flat = main_img.reshape(T * C, H, W)
+                reshape_back["image"] = (T, C, H, W)
+            else:
+                img_flat = main_img
+                reshape_back["image"] = main_img.shape
+
+            alb_input["image"] = img_flat.transpose(1, 2, 0)
+
+            # Additional images
+            for i, key in enumerate(input_keys[1:], start=1):
+                img = batch_elements[key]
+                if img.ndim == 4:
+                    T, C, H, W = img.shape
+                    img_flat = img.reshape(T * C, H, W)
+                    reshape_back[f"image{i}"] = (T, C, H, W)
+                else:
+                    img_flat = img
+                    reshape_back[f"image{i}"] = img.shape
+
+                alb_input[f"image{i}"] = img_flat.transpose(1, 2, 0)
+
+            # Labels
+            for j, key in enumerate(label_keys):
+                lab = batch_elements[key]
+                if lab.ndim == 4:
+                    T, C, H, W = lab.shape
+                    lab_flat = lab.reshape(T * C, H, W)
+                    reshape_back[f"label{j}"] = (T, C, H, W)
+                else:
+                    lab_flat = lab
+                    reshape_back[f"label{j}"] = lab.shape
+
+                alb_input[f"label{j}"] = lab_flat.transpose(1, 2, 0)
+
+            # Apply transform
+            transformed = self.use_augmentations(**alb_input)
+
+            # Reshape back
+            for key, value in transformed.items():
+                v = value.transpose(2, 0, 1)
+                shape = reshape_back[key]
+                if len(shape) == 4:
+                    T, C, H, W = shape
+                    v = v.reshape((T, C, H, W))
+                batch_elements_key = (
+                    input_keys[0] if key == "image" else
+                    input_keys[int(key.replace("image", ""))] if key.startswith("image") else
+                    label_keys[int(key.replace("label", ""))]
+                )
+                batch_elements[batch_elements_key] = v
+
 
         batch_elements = {
             key: torch.as_tensor(value, dtype=torch.float) 
