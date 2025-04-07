@@ -34,14 +34,23 @@ def get_data_module(
     assert isinstance(config['modalities']['pre_processings']["use_metadata"], bool), \
         "use_metadata must be a boolean"
 
+    transform_set = None
     if config['modalities']['pre_processings']["use_augmentation"]:
+        input_keys = [k for k,v in config['modalities']['inputs'].items() if v]
+        label_keys = config['labels']
+
+        additional_targets = {}
+        for i,key in enumerate(input_keys[1:], start=1):
+            additional_targets[f'image{i}'] : "image"
+        for j,key in enumerate(label_keys):
+            additional_targets[f'label{j}'] : "mask"
+
         transform_set = A.Compose([
             A.VerticalFlip(p=0.5),
             A.HorizontalFlip(p=0.5),
             A.RandomRotate90(p=0.5)
-        ])
-    else:
-        transform_set = None
+        ], additional_targets=additional_targets
+        )
 
     dm = FlairDataModule(
         config=config,
