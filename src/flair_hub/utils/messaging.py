@@ -46,9 +46,31 @@ class Logger:
         Args:
             filename (str): Name of the log file.
         """
+        filename = self._get_unique_filename(filename)
         self.terminal = sys.stdout
         self.log = open(filename, 'w', encoding='utf-8')
         self.encoding = self.terminal.encoding
+
+    def _get_unique_filename(self, filename: str) -> str:
+        """
+        Checks if the file exists and appends a version number if needed.
+
+        Args:
+            filename (str): Initial filename.
+
+        Returns:
+            str: Unique filename with version number if necessary.
+        """
+        base, ext = os.path.splitext(filename)
+        if not os.path.exists(filename):
+            return filename
+
+        version = 1
+        while True:
+            new_filename = f"{base}_v{version}{ext}"
+            if not os.path.exists(new_filename):
+                return new_filename
+            version += 1
 
     def write(self, message: str) -> None:
         """
