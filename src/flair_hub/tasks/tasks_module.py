@@ -142,7 +142,8 @@ class SegmentationTask(pl.LightningModule):
                     print(f"\n--->---> Warmup phase completed at step {self.global_step}! LR: {scheduler.get_last_lr()[0]:.6f}")
 
         elif scheduler_type == "cycle_then_plateau" and not self._using_plateau:
-            self._warmup_scheduler.step()
+            if self.global_step < self._warmup_scheduler.total_steps:
+                self._warmup_scheduler.step()
             if self.global_step == self._warmup_scheduler.total_steps:
                 self._using_plateau = True
                 print(f"\n---->---> Switched to ReduceLROnPlateau at step {self.global_step}! LR: {self._warmup_scheduler.get_last_lr()[0]:.6f}")
@@ -249,7 +250,7 @@ class SegmentationTask(pl.LightningModule):
         self._scheduler_type = scheduler_type
 
         if scheduler_type == "reduce_on_plateau":
-            scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=10, cooldown=4, min_lr=1e-7)
+            scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=cfg['plateau_patience'], cooldown=4, min_lr=1e-7)
             return {"optimizer": optimizer, "lr_scheduler": {"scheduler": scheduler, "monitor": "val_loss", "interval": "epoch"}}
 
         if scheduler_type == "one_cycle_lr":
