@@ -38,6 +38,7 @@ hyperparams:
 
     scheduler: one_cycle_lr #  [one_cycle_lr, reduce_on_plateau, cycle_then_plateau]
     warmup_fraction: 0.2 #if using one_cycle_lr. [0-1]
+    plateau_patience: 10
 
 hardware:
     accelerator: 'gpu'
