@@ -96,7 +96,7 @@ class PredictionWriter(BasePredictionWriter):
             df = pd.read_csv(csv_path)
             gt_paths = df[task].tolist()
 
-            pred_dir = Path(self.output_dir) / "predictions" / task
+            pred_dir = Path(self.output_dir) / "predictions_" + self.config['paths']['out_model_name'] / task
             missing_preds = []
             valid_preds = 0
 
