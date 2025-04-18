@@ -39,7 +39,7 @@ class PredictionWriter(BasePredictionWriter):
             if self.accumulated_confmats[task] is None:
                 self.accumulated_confmats[task] = np.zeros((task_num_classes, task_num_classes), dtype=int)
 
-            output_dir_predictions = Path(self.output_dir, "predictions", task)
+            output_dir_predictions = Path(self.output_dir, "predictions_" + self.config['paths']['out_model_name'], task)
             output_dir_predictions.mkdir(exist_ok=True, parents=True)
 
             preds = prediction[f'preds_{task}'].cpu().numpy().astype("uint8")
