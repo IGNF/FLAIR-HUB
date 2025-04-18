@@ -68,7 +68,7 @@ def compute_and_save_metrics(confmat, config, output_dir, task, mode="predict"):
         "per_class_modality_weights": modality_weights_cleaned,
     }
 
-    out_folder_metrics = Path(output_dir, "metrics_" + self.config['paths']['out_model_name'], task)
+    out_folder_metrics = Path(output_dir, "metrics_" + config['paths']['out_model_name'], task)
     out_folder_metrics.mkdir(exist_ok=True, parents=True)
     np.save(out_folder_metrics / f"confmat_{mode}.npy", confmat)
     with open(out_folder_metrics / "metrics.json", "w") as f:
