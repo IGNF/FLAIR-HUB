@@ -135,6 +135,7 @@ def predict(config: Dict[str, Any], data_module: Any, seg_module: nn.Module, out
         num_nodes=config['hardware']["num_nodes"],
         callbacks=[writer_callback],
         enable_progress_bar=config['saving']["enable_progress_bar"],
+        logger=False,
     )
 
     trainer.predict(seg_module, datamodule=data_module, return_predictions=False)
