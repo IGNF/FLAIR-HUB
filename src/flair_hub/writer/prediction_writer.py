@@ -47,15 +47,14 @@ class PredictionWriter(BasePredictionWriter):
 
             with rasterio.open(id_in_file[0], 'r') as src_img:
                 target = src_img.read(self.channel).squeeze()
+                meta = src_img.profile
+                meta["count"] = 1
+                meta["compress"] = "lzw"
 
             if self.config["tasks"]["write_files"]:
                 out_name = f"PRED_{id_in_file[0].split('/')[-1]}"
                 output_file = str(output_dir_predictions / out_name)
                 if self.config["tasks"]["georeferencing_output"]:
-                    with rasterio.open(id_in_file[0], "r") as f:
-                        meta = f.profile
-                        meta["count"] = 1
-                        meta["compress"] = "lzw"
                     with rasterio.open(output_file, "w", **meta) as dst:
                         dst.write(preds[0].astype("uint8"), 1)
                 else:
