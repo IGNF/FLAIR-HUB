@@ -48,8 +48,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'flair_inc=flair_inc.main:main'
-            'flair_inc_detect=zone_detect.main:main',
+            'flairhub=flair_hub.main:main'
+            'flairhub_zonal=flair_zonal_detection.main:main',
         ]
     }
 )
