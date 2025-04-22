@@ -5,12 +5,12 @@ setup(
     version='0.0.1',  # Change this as needed or implement dynamic version reading from VERSION file
     author='Anatol Garioud',
     author_email='flair@ign.fr',
-    description='baseline and demo code for FLAIR-INC dataset',
+    description='baseline and demo code for FLAIR-HUB dataset',
     long_description='French Land-cover from Arospace ImageRy',
     long_description_content_type='French Land-cover from Arospace ImageRy',
-    url='https://github.com/IGNF/FLAIR-INC',
+    url='https://github.com/IGNF/FLAIR-HUB',
     project_urls={
-        'Bug Tracker': 'https://github.com/IGNF/FLAIR-INC'
+        'Bug Tracker': 'https://github.com/IGNF/FLAIR-HUB'
     },
     classifiers=[
         'Programming Language :: Python :: 3',
@@ -24,7 +24,7 @@ setup(
     ],
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
-    python_requires='>=3.10',
+    python_requires='==3.11.0',
     install_requires=[
         'geopandas==1.0.1',
         'rasterio==1.4.3',
