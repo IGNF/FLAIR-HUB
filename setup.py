@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='flair-inc',
-    version='0.0.1',  # Change this as needed or implement dynamic version reading from VERSION file
-    author='Anatol Garioud',
+    name='flair-hub',
+    version='0.1.0',  # Change this as needed or implement dynamic version reading from VERSION file
+    author='IGNF | Anatol Garioud',
     author_email='flair@ign.fr',
     description='baseline and demo code for FLAIR-HUB dataset',
     long_description='French Land-cover from Arospace ImageRy',
@@ -38,7 +38,6 @@ setup(
         "torchmetrics==1.2.0",
         "pytorch-lightning==2.1.1",
         "segmentation-models-pytorch==0.4.0",
-        "albumentations==1.3.1",
         "tensorboard==2.15.1",
         "codecarbon>=2.8.1"
     ],
@@ -48,7 +47,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'flairhub=flair_hub.main:main'
+            'flairhub=flair_hub.main:main',
             'flairhub_zonal=flair_zonal_detection.main:main',
         ]
     }
