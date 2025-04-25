@@ -2,7 +2,7 @@ models:
 
     monotemp_model: # encoder-decoder from SMP
 
-        arch: 'swin_small_patch4_window12_384-upernet' 
+        arch: 'swin_base_patch4_window12_384-upernet' 
         new_channels_init_mode: 'random' # possible :  copy_first, copy_second, copy_third, random
 
     multitemp_model: 
