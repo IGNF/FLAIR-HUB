@@ -52,8 +52,8 @@ modalities:
     normalization: 
         norm_type : custom   # possible :  custom, scaling, without
 
-        AERIAL_RGBI_means : [105.66, 111.35, 102.18]  #[105.66, 111.35, 102.18, 106.59]
-        AERIAL_RGBI_stds  : [52.23, 45.62, 44.30] #[52.23, 45.62, 44.29, 39.78]
+        AERIAL_RGBI_means : [106.59, 105.66, 111.35]  #[105.66, 111.35, 102.18, 106.59]
+        AERIAL_RGBI_stds  : [39.78, 52.23, 45.62] #[52.23, 45.62, 44.29, 39.78]
 
         AERIAL-RLT_PAN_means : [125.92]
         AERIAL-RLT_PAN_stds  : [38.45]
