@@ -1,6 +1,6 @@
 <div align="center">
   
-# FLAIR-INC
+# FLAIR-HUB
 # Multimodal & multitask semantic segmentation of Earth Observation imagery
 
 
@@ -14,7 +14,7 @@ Participate in obtaining more accurate maps for a more comprehensive description
 
 
 
-![Alt bandeau FLAIR-IGN](images/flair_bandeau.jpg?raw=true)
+![Alt bandeau FLAIR-HUB](images/flair_bandeau.jpg?raw=true)
 
 </div>
 
