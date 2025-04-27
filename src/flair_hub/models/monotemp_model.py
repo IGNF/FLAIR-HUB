@@ -72,14 +72,24 @@ class FLAIR_Monotemp(nn.Module):
                 in_channels=channels,
                 img_size=img_size,
             )
-        except KeyError:
-            self.seg_model = smp.create_model(
-                arch=decoder,
-                encoder_name='tu-' + encoder,  # timm models of smp 
-                classes=classes,
-                in_channels=channels,
-                img_size=img_size,
-            )
+        except (KeyError, TypeError):
+            # Try with 'tu-' prefix, and possibly without img_size
+            try:
+                self.seg_model = smp.create_model(
+                    arch=decoder,
+                    encoder_name='tu-' + encoder,
+                    classes=classes,
+                    in_channels=channels,
+                    img_size=img_size,
+                )
+            except TypeError:
+                # Fallback: no img_size
+                self.seg_model = smp.create_model(
+                    arch=decoder,
+                    encoder_name='tu-' + encoder,
+                    classes=classes,
+                    in_channels=channels,
+                )
 
         if self.return_type == 'encoder':
             self.seg_model = self.seg_model.encoder
