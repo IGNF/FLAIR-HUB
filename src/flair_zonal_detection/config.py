@@ -3,27 +3,19 @@ import yaml
 from pytorch_lightning.utilities.rank_zero import rank_zero_only
 
 
-@rank_zero_only
-class Logger(object):
-    def __init__(self, filename='inference.log'):
-        self.terminal = sys.stdout
-        self.log = open(filename, 'w', encoding='utf-8')
-        self.encoding = self.terminal.encoding
 
-    def write(self, message):
-        self.terminal.write(message)
-        self.log.write(message)
-
-    def flush(self):
-        self.log.flush()
-
-
-def load_config(path):
+def load_config(path: str) -> dict:
+    """
+    Load YAML configuration from the given file path.
+    """
     with open(path, 'r') as f:
         return yaml.safe_load(f)
 
 
-def validate_config(config):
+def validate_config(config: dict) -> None:
+    """
+    Validate that required configuration keys are present and valid.
+    """
     required_keys = [
         'output_path', 'output_name', 'model_weights', 'img_pixels_detection',
         'margin', 'modalities', 'tasks', 'reference_modality_for_slicing'
@@ -43,14 +35,19 @@ def validate_config(config):
 
 
 
-def summarize_config(config):
+def summarize_config(config: dict) -> None:
+    """
+    Print a summary of the configuration settings.
+    """
     ref_mod = config['reference_modality_for_slicing']
+    used_mods = ', '.join([m for m, active in config['modalities']['inputs'].items() if active])
+    active_tasks = ', '.join([t['name'] for t in config['tasks'] if t['active']])
+    device = "cuda" if config.get('use_gpu', False) else "cpu"
 
     print(f"""
 ##############################################
 FLAIR-HUB ZONE DETECTION
 ##############################################
-          
 |→ Output path        : {config['output_path']}
 |→ Output file name   : {config['output_name']}.tif
 
@@ -59,13 +56,12 @@ FLAIR-HUB ZONE DETECTION
 |→ Tile size (px)     : {config['img_pixels_detection']}
 |→ Margin (px)        : {config['margin']}
 
-|→ Modalities used    : {', '.join([m for m, act in config['modalities']['inputs'].items() if act])}
-|→ Tasks active       : {', '.join([t['name'] for t in config['tasks'] if t['active']])}
+|→ Modalities used    : {used_mods}
+|→ Tasks active       : {active_tasks}
 |→ Output type        : {config['output_type']}
 
 |→ Checkpoint path    : {config['model_weights']}
-|→ Device             : {"cuda" if config['use_gpu'] else "cpu"}
+|→ Device             : {device}
 |→ Batch size         : {config['batch_size']}
 |→ Num workers        : {config['num_worker']}
-
-    """)
+""")
