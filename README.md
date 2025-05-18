@@ -254,8 +254,7 @@ Please include a citation to the following article if you use the FLAIR #1 datas
 ```
 
 ## Acknowledgment
-This work was performed using HPC/AI resources from
-GENCI-IDRIS (Grant 2022-A0131013803).
+The experiments conducted in this study were performed using HPC/AI resources provided by GENCI-IDRIS (Grant 2024-A0161013803, 2024-AD011014286R2 and 2025-A0181013803).
 
 ## Dataset license
 
