@@ -23,6 +23,8 @@ Participate in obtaining more accurate maps for a more comprehensive description
 <h2 style="margin-top:5px;">:mag_right:Quicklinks</h2>
 
 
+- **Entry page :**  [FLAIR-HUB dataset page](https://ignf.github.io/FLAIR/flairhub) <br>
+  
 - **Datapaper :** 
 
 - **Dataset links :** 
