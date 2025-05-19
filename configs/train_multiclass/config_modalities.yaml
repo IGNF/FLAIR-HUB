@@ -25,7 +25,7 @@ modalities:
         SENTINEL1-ASC_TS  : False
         SENTINEL1-DESC_TS : False
 
-    aux_loss_weight: 1.5 # multiplier before adding to main loss
+    aux_loss_weight: 1.0 # multiplier before adding to main loss
 
     modality_dropout: # between 0 (no dropout) and 1 (complete systematic dropout)
         AERIAL_RGBI       : 0
