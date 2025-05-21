@@ -2,7 +2,7 @@ import os
 import torch
 
 from pytorch_lightning.utilities.rank_zero import rank_zero_only
-
+from safetensors.torch import load_file as safe_load_file
 
 def reinit_param(state_dict, model_dict, key):
     if key not in model_dict:
@@ -90,8 +90,13 @@ def load_checkpoint(conf, seg_module, exit_on_fail=False):
             raise SystemExit()
         return
 
-    ckpt = torch.load(path, map_location="cpu")
-    state_dict = ckpt.get("state_dict", ckpt)
+    is_safe = path.endswith(".safetensors")
+    if is_safe:
+        print("→ Detected safetensors format.")
+        state_dict = safe_load_file(path)
+    else:
+        ckpt = torch.load(path, map_location="cpu")
+        state_dict = ckpt.get("state_dict", ckpt)
     print(f"→ Original state dict keys: {len(state_dict)}")
 
     state_dict = strip_model_prefix_if_needed(state_dict, seg_module.state_dict(), verbose=False)
