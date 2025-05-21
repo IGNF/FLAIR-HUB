@@ -147,9 +147,12 @@ class MultiModalSlicedDataset(Dataset):
             msk = reshape_sentinel(msk, chunk_size=2)
             valid_idx = filter_time_series(msk)
 
-            patch = patch[valid_idx]
-            self.diff_dates[mod_name]['dates'] = self.diff_dates[mod_name]['dates'][valid_idx]
-            self.diff_dates[mod_name]['diff_dates'] = self.diff_dates[mod_name]['diff_dates'][valid_idx]
+            if valid_idx.sum() > 0:
+                patch = patch[valid_idx]
+                self.diff_dates[mod_name]['dates'] = self.diff_dates[mod_name]['dates'][valid_idx]
+                self.diff_dates[mod_name]['diff_dates'] = self.diff_dates[mod_name]['diff_dates'][valid_idx]
+            else:
+                pass
 
         if cfg.get('temporal_average', False):
             patch, diffs = temporal_average(
