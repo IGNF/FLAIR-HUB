@@ -97,7 +97,7 @@ def generate_patches_from_reference(config: Dict) -> gpd.GeoDataFrame:
     gdf_output = gpd.GeoDataFrame(tiles, crs=profile['crs'], geometry='geometry')
 
     if write_dataframe:
-        gpkg_path = os.path.join(output_path, output_name.replace('.tif', '_slicing_job.gpkg'))
+        gpkg_path = os.path.join(output_path, output_name+'_slicing_job.gpkg')
         gdf_output.to_file(gpkg_path, driver='GPKG')
 
     return gdf_output
