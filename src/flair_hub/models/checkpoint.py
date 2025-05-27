@@ -1,8 +1,10 @@
 import os
 import torch
+import torch.nn as nn
 
 from pytorch_lightning.utilities.rank_zero import rank_zero_only
 from safetensors.torch import load_file as safe_load_file
+
 
 def reinit_param(state_dict, model_dict, key):
     if key not in model_dict:
@@ -15,6 +17,23 @@ def reinit_param(state_dict, model_dict, key):
             nn.init.zeros_(param)
         state_dict[key] = param
     return True
+
+def interpolate_bias_table(ckpt_tensor, model_tensor):
+    old_len, num_heads = ckpt_tensor.shape
+    new_len = model_tensor.shape[0]
+    if old_len == new_len:
+        return ckpt_tensor
+
+    size_old = int(old_len ** 0.5)
+    size_new = int(new_len ** 0.5)
+
+    assert size_old * size_old == old_len, f"Checkpoint bias table shape {old_len} is not square"
+    assert size_new * size_new == new_len, f"Model bias table shape {new_len} is not square"
+
+    bias = ckpt_tensor.reshape(1, size_old, size_old, num_heads).permute(0, 3, 1, 2)
+    bias = torch.nn.functional.interpolate(bias, size=(size_new, size_new), mode='bicubic', align_corners=False)
+    bias = bias.permute(0, 2, 3, 1).reshape(new_len, num_heads)
+    return bias
 
 def get_task_name_from_aux_key(key: str) -> str:
     return key.split(".")[2].split("__")[1]
@@ -133,22 +152,27 @@ def load_checkpoint(conf, seg_module, exit_on_fail=False):
                 state_dict[crit_key] = model_dict[crit_key].clone()
                 reinit_counter[0] += 1
 
-    # Shape mismatch fallback
     for k in list(state_dict):
         if k in model_dict and state_dict[k].shape != model_dict[k].shape:
-            print(f"→ Shape mismatch for {k}. Reinitializing...")
-            reinit_counter[0] += reinit_param(state_dict, model_dict, k)
+            ckpt_shape = state_dict[k].shape
+            model_shape = model_dict[k].shape
+            if "relative_position_bias_table" in k:
+                print(f"→ Interpolating {k}: {ckpt_shape} → {model_shape}")
+                try:
+                    state_dict[k] = interpolate_bias_table(state_dict[k], model_dict[k])
+                except Exception as e:
+                    print(f"⚠️  Interpolation failed for {k}: {e}. Reinitializing instead.")
+                    reinit_counter[0] += reinit_param(state_dict, model_dict, k)
+            else:
+                print(f"→ Shape mismatch for {k}: checkpoint {ckpt_shape} vs model {model_shape}. Reinitializing...")
+                reinit_counter[0] += reinit_param(state_dict, model_dict, k)
 
-    # Debug values
-    print("\nExample param BEFORE:", next(iter(seg_module.parameters())).view(-1)[:5])
-
-    # Load
+    print("\nExample param BEFORE loading weights:", next(iter(seg_module.parameters())).view(-1)[:5])
     seg_module.load_state_dict(state_dict, strict=False)
-
-    print("Example param AFTER:", next(iter(seg_module.parameters())).view(-1)[:5])
+    print("Example param AFTER loading weights:", next(iter(seg_module.parameters())).view(-1)[:5])
 
     # Summary
-    print("\n✅ Checkpoint load summary:")
+    print("\nCheckpoint load summary:")
     print(f"  - Tasks fully matched: {sorted(matched_tasks)}")
     print(f"  - Tasks reinitialized: {sorted(reinit_tasks)}")
     print(f"  - Total reinitialized tensors: {reinit_counter[0]}")
