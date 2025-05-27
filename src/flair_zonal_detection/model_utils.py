@@ -88,6 +88,21 @@ def prepare_model_config(config: Dict[str, Any]) -> Dict[str, Any]:
         mod: False for mod in cfg["modalities"]["inputs"]
     })
 
+    # === Patch: Generate pre_processings block ===
+    dem_cfg = cfg["modalities"].get("DEM_ELEV", {})
+    pre_proc_defaults = {
+        "calc_elevation": dem_cfg.get("calc_elevation", False),
+        "calc_elevation_stack_dsm": dem_cfg.get("calc_elevation_stack_dsm", False),
+        "filter_sentinel2": False,
+        "filter_sentinel2_max_cloud": 100,
+        "filter_sentinel2_max_snow": 100,
+        "filter_sentinel2_max_frac_cover": 1.0,
+        "temporal_average_sentinel2": False,
+        "temporal_average_sentinel1": False,
+        "use_augmentation": False
+    }
+    cfg["modalities"].setdefault("pre_processings", pre_proc_defaults)
+
     # Ensure checkpoint path is passed
     cfg.setdefault("paths", {})["ckpt_model_path"] = config["model_weights"]
 
