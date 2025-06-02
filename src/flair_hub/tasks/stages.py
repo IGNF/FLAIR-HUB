@@ -6,10 +6,10 @@ import datetime
 from pytorch_lightning import seed_everything
 from datetime import timedelta
 
-from flair_hub.writer.prediction_writer import PredictionWriter
-from flair_hub.tasks.trainers import train, predict
-from flair_hub.models.checkpoint import load_checkpoint
-from flair_hub.tasks.module_setup import get_input_img_sizes, build_segmentation_module
+from src.flair_hub.writer.prediction_writer import PredictionWriter
+from src.flair_hub.tasks.trainers import train, predict
+from src.flair_hub.models.checkpoint import load_checkpoint
+from src.flair_hub.tasks.module_setup import get_input_img_sizes, build_segmentation_module
 
 
 def training_stage(config, data_module, out_dir):

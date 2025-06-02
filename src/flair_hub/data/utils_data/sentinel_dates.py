@@ -6,8 +6,10 @@ import json
 from typing import Dict, Tuple, Any
 
 
-def prepare_sentinel_dates(config: Dict[str, Any], file_path: str) -> Dict:
-    gdf = gpd.read_file(file_path)
+def prepare_sentinel_dates(config: Dict[str, Any], file_path: str, patch_ids: set) -> Dict:
+    gdf = gpd.read_file(file_path, engine='pyogrio', use_arrow=True)
+    gdf = gdf[gdf['patch_id'].isin(patch_ids)]
+
     ref_month, ref_day = map(int, config['models']['multitemp_model']['ref_date'].split('-'))
 
     dict_dates = {}
@@ -34,7 +36,7 @@ def prepare_sentinel_dates(config: Dict[str, Any], file_path: str) -> Dict:
     return dict_dates
 
 
-def get_sentinel_dates_mtd(config: dict) -> Tuple[Dict[str, str], Dict[str, str], Dict[str, str]]:
+def get_sentinel_dates_mtd(config: dict, patch_ids: set) -> Tuple[Dict[str, str], Dict[str, str], Dict[str, str]]:
     """
     Retrieve sentinel dates metadata based on the provided configuration.
     Args:
@@ -54,10 +56,10 @@ def get_sentinel_dates_mtd(config: dict) -> Tuple[Dict[str, str], Dict[str, str]
         return dates_s2, dates_s1asc, dates_s1desc
 
     if sen2_used:
-        dates_s2 = prepare_sentinel_dates(config, config['paths']['global_mtd_folder'] + 'GLOBAL_SENTINEL2_MTD_DATES.gpkg')
+        dates_s2 = prepare_sentinel_dates(config, config['paths']['global_mtd_folder'] + 'GLOBAL_SENTINEL2_MTD_DATES.gpkg', patch_ids)
     if sen1asc_used:
-        dates_s1asc = prepare_sentinel_dates(config, config['paths']['global_mtd_folder'] + 'GLOBAL_SENTINEL1-ASC_MTD_DATES.gpkg')
+        dates_s1asc = prepare_sentinel_dates(config, config['paths']['global_mtd_folder'] + 'GLOBAL_SENTINEL1-ASC_MTD_DATES.gpkg', patch_ids)
     if sen1desc_used:
-        dates_s1desc = prepare_sentinel_dates(config, config['paths']['global_mtd_folder'] + 'GLOBAL_SENTINEL1-DESC_MTD_DATES.gpkg')
+        dates_s1desc = prepare_sentinel_dates(config, config['paths']['global_mtd_folder'] + 'GLOBAL_SENTINEL1-DESC_MTD_DATES.gpkg', patch_ids)
 
     return dates_s2, dates_s1asc, dates_s1desc

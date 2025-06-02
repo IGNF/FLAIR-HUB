@@ -2,8 +2,8 @@ from torch.utils.data import DataLoader
 from pytorch_lightning import LightningDataModule
 from typing import Dict, Optional
 
-from flair_hub.data.dataloader import flair_dataset
-from flair_hub.data.utils_data.padding import pad_collate_flair
+from src.flair_hub.data.dataloader import flair_dataset
+from src.flair_hub.data.utils_data.padding import pad_collate_flair
 
 
 class FlairDataModule(LightningDataModule):

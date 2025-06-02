@@ -34,17 +34,27 @@ def end_msg():
 #######################################################         
 ####################  FINISHED  #######################    
 """)
+    print(datetime.datetime.now().strftime("Ending: %Y-%m-%d  %H:%M") + '\n')
     
 
 
 @rank_zero_only
 class Logger:
+    """
+    Custom logger that mirrors stdout to both the terminal and a log file.
+    Useful for capturing experiment logs during training or inference.
+
+    Attributes:
+        terminal (TextIO): The original system stdout.
+        log (TextIO): The file object to write logs to.
+    """
+
     def __init__(self, filename: str = 'Default.log') -> None:
         """
-        Initializes a custom logger to output to both terminal and log file.
+        Initialize a Logger instance that writes both to stdout and a file.
 
         Args:
-            filename (str): Name of the log file.
+            filename (str): The log file name. Will be made unique if already exists.
         """
         filename = self._get_unique_filename(filename)
         self.terminal = sys.stdout
@@ -53,13 +63,13 @@ class Logger:
 
     def _get_unique_filename(self, filename: str) -> str:
         """
-        Checks if the file exists and appends a version number if needed.
+        Generate a unique filename by appending a version suffix if needed.
 
         Args:
-            filename (str): Initial filename.
+            filename (str): The initial filename requested.
 
         Returns:
-            str: Unique filename with version number if necessary.
+            str: A unique filename that doesn't overwrite existing files.
         """
         base, ext = os.path.splitext(filename)
         if not os.path.exists(filename):
@@ -74,16 +84,31 @@ class Logger:
 
     def write(self, message: str) -> None:
         """
-        Writes the log message to both the terminal and the log file.
+        Write a message to both stdout and the log file.
 
         Args:
-            message (str): The message to be logged.
+            message (str): The string message to be logged.
         """
         self.terminal.write(message)
         self.log.write(message)
 
     def flush(self) -> None:
         """
-        Flushes the log file to ensure all data is written.
+        Flush the log file stream.
         """
         self.log.flush()
+
+    def close(self) -> None:
+        """
+        Close the log file stream.
+        """
+        self.log.close()
+
+    def isatty(self) -> bool:
+        """
+        Indicates whether the stream is interactive. Needed for tqdm compatibility.
+
+        Returns:
+            bool: Always False to ensure tqdm behaves correctly.
+        """
+        return False

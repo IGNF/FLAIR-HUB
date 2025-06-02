@@ -10,19 +10,20 @@ current = Path(__file__).resolve()
 while current.name != "src" and current != current.parent:
     current = current.parent
 src_root = current
-if str(src_root) not in sys.path:
-    sys.path.insert(0, str(src_root))
+project_root = src_root.parent 
+
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 
-from flair_hub.tasks.stages import training_stage, predict_stage
-from flair_hub.writer.prediction_writer import PredictionWriter
-from flair_hub.tasks.module_setup import build_data_module
-from flair_hub.data.utils_data.paths import get_datasets
+from src.flair_hub.tasks.stages import training_stage, predict_stage
+from src.flair_hub.tasks.module_setup import build_data_module
+from src.flair_hub.data.utils_data.paths import get_datasets
 
-from flair_hub.utils.messaging import start_msg, end_msg, Logger
-from flair_hub.utils.config_io import setup_environment, copy_csv_and_config
-from flair_hub.utils.config_display import print_recap
-from flair_hub.utils.emissions import emission_tracking_summary
+from src.flair_hub.utils.messaging import start_msg, end_msg, Logger
+from src.flair_hub.utils.config_io import setup_environment, copy_csv_and_config
+from src.flair_hub.utils.config_display import print_recap
+from src.flair_hub.utils.emissions import emission_tracking_summary
 
 
 

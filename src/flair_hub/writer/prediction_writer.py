@@ -11,7 +11,7 @@ from PIL import Image
 from tqdm import tqdm
 from sklearn.metrics import confusion_matrix
 
-from flair_hub.writer.metrics_utils import compute_and_save_metrics
+from src.flair_hub.writer.metrics_utils import compute_and_save_metrics
 
 
 def exit_ddp():
@@ -67,16 +67,20 @@ class PredictionWriter(BasePredictionWriter):
     def on_predict_epoch_end(self, trainer, pl_module) -> None:
         for task, local_confmat in self.accumulated_confmats.items():
             if local_confmat is None:
-                # Still create a zero tensor for sync
                 task_num_classes = len(self.config["labels_configs"][task]["value_name"])
                 local_confmat = np.zeros((task_num_classes, task_num_classes), dtype=int)
 
             tensor_confmat = torch.tensor(local_confmat, device=pl_module.device)
-            gathered = [torch.zeros_like(tensor_confmat) for _ in range(dist.get_world_size())]
-            dist.all_gather(gathered, tensor_confmat)
 
-            if dist.get_rank() == 0:
-                global_confmat = sum([g.cpu().numpy() for g in gathered])
+            if dist.is_available() and dist.is_initialized():
+                gathered = [torch.zeros_like(tensor_confmat) for _ in range(dist.get_world_size())]
+                dist.all_gather(gathered, tensor_confmat)
+
+                if dist.get_rank() == 0:
+                    global_confmat = sum([g.cpu().numpy() for g in gathered])
+                    compute_and_save_metrics(global_confmat, self.config, self.output_dir, task, mode="predict")
+            else:
+                global_confmat = tensor_confmat.cpu().numpy()
                 compute_and_save_metrics(global_confmat, self.config, self.output_dir, task, mode="predict")
 
         exit_ddp()

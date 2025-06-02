@@ -1,9 +1,23 @@
 import os
 import pandas as pd
 
-from typing import Dict, Any, Tuple, Optional
+from typing import Dict, Any, Tuple, Optional, List
 
-from flair_hub.data.utils_data.sentinel_dates import get_sentinel_dates_mtd
+from src.flair_hub.data.utils_data.sentinel_dates import get_sentinel_dates_mtd
+
+
+def extract_sentinel_patch_ids(dicts: List[Dict]) -> set:
+    patch_ids = set()
+    for d in dicts:
+        if d is None:
+            continue
+        for key in ['SENTINEL2_TS', 'SENTINEL1-ASC_TS', 'SENTINEL1-DESC_TS']:
+            for path in d.get(key, []):
+                fname = path.split('/')[-1]
+                patch_id = fname.replace(f'_{key}', '').replace('.tif', '')
+                patch_ids.add(patch_id)
+    return patch_ids
+
 
 def get_paths(config: Dict[str, Any], split: str = 'train') -> Dict:
     """
@@ -66,8 +80,11 @@ def get_datasets(config: Dict[str, Any]) -> Tuple[Optional[Dict], Optional[Dict]
         
     if config['tasks']['predict']: 
         dict_test  = get_paths(config, split='test')
+
+    all_dicts = [dict_train, dict_val, dict_test]
+    used_patch_ids = extract_sentinel_patch_ids(all_dicts)
     
-    dates_s2, dates_s1asc, dates_s1desc = get_sentinel_dates_mtd(config)
+    dates_s2, dates_s1asc, dates_s1desc = get_sentinel_dates_mtd(config, used_patch_ids)
 
     for d in [dict_train, dict_val, dict_test]: 
         if d is not None:

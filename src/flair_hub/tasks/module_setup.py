@@ -3,9 +3,9 @@ import torch
 from torch import nn
 from typing import Optional, Dict, Any
 
-from flair_hub.models.flair_model import FLAIR_INC_Model
-from flair_hub.data.datamodule import FlairDataModule
-from flair_hub.tasks.tasks_module import SegmentationTask
+from src.flair_hub.models.flair_model import FLAIR_INC_Model
+from src.flair_hub.data.datamodule import FlairDataModule
+from src.flair_hub.tasks.tasks_module import SegmentationTask
 
 
     

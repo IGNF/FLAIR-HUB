@@ -4,12 +4,12 @@ import torch
 from typing import Dict
 from torch.utils.data import Dataset
 
-from flair_hub.data.utils_data.io import read_patch
-from flair_hub.data.utils_data.norm import norm
-from flair_hub.data.utils_data.augmentations import apply_numpy_augmentations
-from flair_hub.data.utils_data.label import reshape_label_ohe
-from flair_hub.data.utils_data.elevation import calc_elevation
-from flair_hub.data.utils_data.sentinel import (
+from src.flair_hub.data.utils_data.io import read_patch
+from src.flair_hub.data.utils_data.norm import norm
+from src.flair_hub.data.utils_data.augmentations import apply_numpy_augmentations
+from src.flair_hub.data.utils_data.label import reshape_label_ohe
+from src.flair_hub.data.utils_data.elevation import calc_elevation
+from src.flair_hub.data.utils_data.sentinel import (
     reshape_sentinel,
     filter_time_series,
     temporal_average,

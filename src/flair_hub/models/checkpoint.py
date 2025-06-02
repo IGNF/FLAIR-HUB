@@ -39,12 +39,17 @@ def get_task_name_from_aux_key(key: str) -> str:
     return key.split(".")[2].split("__")[1]
 
 def resolve_key(key, state_dict):
-    # Try raw, stripped, or prefixed key
-    candidates = [key, key.removeprefix("model."), f"model.{key}"]
+    candidates = [key]
+    if key.startswith("model."):
+        candidates.append(key[len("model."):])
+    else:
+        candidates.append(f"model.{key}")
+
     for k in candidates:
         if k in state_dict:
             return k
     return None
+
 
 def check_and_reinit_layer(state_dict, model_dict, key_weight, key_bias, expected_classes, matched_tasks, reinit_tasks, task_label, reinit_counter):
     real_key_weight = resolve_key(key_weight, state_dict)
@@ -128,11 +133,24 @@ def load_checkpoint(conf, seg_module, exit_on_fail=False):
 
     # Main decoders
     for task in tasks:
-        w_key = f"main_decoders.{task}.seg_model.segmentation_head.0.weight"
-        b_key = w_key.replace("weight", "bias")
+        weight_keys = [
+            f"model.main_decoders.{task}.seg_model.segmentation_head.0.weight",
+            f"main_decoders.{task}.seg_model.segmentation_head.0.weight"
+        ]
+        bias_keys = [k.replace("weight", "bias") for k in weight_keys]
         n_classes = len(conf["labels_configs"][task]["value_name"])
-        check_and_reinit_layer(state_dict, model_dict, w_key, b_key, n_classes,
-                               matched_tasks, reinit_tasks, task, reinit_counter)
+
+        matched = False
+        for w_key, b_key in zip(weight_keys, bias_keys):
+            pre_match = len(matched_tasks)
+            check_and_reinit_layer(state_dict, model_dict, w_key, b_key, n_classes,
+                                matched_tasks, reinit_tasks, task, reinit_counter)
+            if len(matched_tasks) > pre_match:
+                matched = True
+                break
+        if not matched:
+            print(f"No valid weights found for task '{task}', reinitialized.")
+
 
     # Auxiliary decoders
     for key in model_dict:

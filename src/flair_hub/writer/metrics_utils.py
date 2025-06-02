@@ -2,7 +2,7 @@ import json
 import numpy as np
 from pathlib import Path
 
-from flair_hub.writer.metrics_core import (
+from src.flair_hub.writer.metrics_core import (
     class_IoU,
     overall_accuracy,
     class_precision,

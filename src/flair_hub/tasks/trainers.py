@@ -10,7 +10,7 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.callbacks.progress.tqdm_progress import TQDMProgressBar
 from pytorch_lightning.loggers import TensorBoardLogger
 
-from flair_hub.writer.prediction_writer import PredictionWriter
+from src.flair_hub.writer.prediction_writer import PredictionWriter
 
 
 def check_batchnorm_and_batch_size(config: Dict[str, Any], seg_module: nn.Module) -> None:
