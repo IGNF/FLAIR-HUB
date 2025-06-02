@@ -18,19 +18,17 @@ def compute_patch_sizes(config: Dict[str, Any]) -> Dict[str, int]:
     """
     Compute patch size for each modality based on the reference modality's resolution.
     """
-    ref_mod = config['reference_modality_for_slicing']
-    ref_path = config['modalities'][ref_mod]['input_img_path']
-    ref_patch = config['img_pixels_detection']
-    ref_res = get_resolution(ref_path)
-
     patch_sizes = {}
+    target_res = config['reference_resolution']
+
     for mod, active in config['modalities']['inputs'].items():
         if not active:
             continue
-        mod_path = config['modalities'][mod]['input_img_path']
-        mod_res = get_resolution(mod_path)
-        scale = mod_res / ref_res
-        patch_sizes[mod] = int(round(ref_patch / scale))
+        mod_res = get_resolution(config['modalities'][mod]['input_img_path'])
+        scale = mod_res / target_res
+        patch_sizes[mod] = int(round(config['img_pixels_detection'] / scale))
+
+    print('PATCH SIZES ---> ', patch_sizes)
 
     return patch_sizes
 

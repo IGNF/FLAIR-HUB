@@ -2,9 +2,8 @@ import os
 import numpy as np
 import rasterio
 import geopandas as gpd
-
 from shapely.geometry import box
-from typing import Tuple, Dict
+from typing import Dict
 
 
 def create_box_from_bounds(x_min: float, x_max: float, y_min: float, y_max: float) -> box:
@@ -24,24 +23,29 @@ def generate_patches_from_reference(config: Dict) -> gpd.GeoDataFrame:
     Returns:
         GeoDataFrame with tile metadata and geometries
     """
-    ref_mod = config['reference_modality_for_slicing']
-    img_path = config['modalities'][ref_mod]['input_img_path']
     patch_size = config['img_pixels_detection']
     margin = config['margin']
     output_path = config['output_path']
     output_name = config['output_name']
     write_dataframe = config.get('write_dataframe', False)
 
+    # Open the image corresponding to the reference modality
+    ref_mod = config['reference_modality']
+    img_path = config['modalities'][ref_mod]['input_img_path']
     with rasterio.open(img_path) as src:
         profile = src.profile
         left_overall, bottom_overall, right_overall, top_overall = src.bounds
-        resolution = abs(round(src.res[0], 5)), abs(round(src.res[1], 5))
 
-    geo_output_size = (patch_size * resolution[0], patch_size * resolution[1])
-    geo_margin = (margin * resolution[0], margin * resolution[1])
+    resolution = config['reference_resolution']
+
+    # Convert patch and margin to physical size
+    geo_output_size = (patch_size * resolution, patch_size * resolution)
+    geo_margin = (margin * resolution, margin * resolution)
+
+    # Compute stride (step between patch centers)
     geo_step = (
-        geo_output_size[0] - 2 * geo_margin[0],
-        geo_output_size[1] - 2 * geo_margin[1]
+        (patch_size - 2 * margin) * resolution,
+        (patch_size - 2 * margin) * resolution
     )
 
     min_x, min_y = left_overall, bottom_overall
@@ -64,15 +68,14 @@ def generate_patches_from_reference(config: Dict) -> gpd.GeoDataFrame:
             bottom = y_coord + geo_margin[1]
             top = min(y_coord + geo_output_size[1] - geo_margin[1], max_y)
 
-            # Round patch coordinates
             patch_bounds = tuple(round(val, 6) for val in (left, bottom, right, top))
             if patch_bounds in existing_patches:
                 continue
 
             existing_patches.add(patch_bounds)
 
-            col = int((x_coord - min_x) // resolution[0]) + 1
-            row = int((y_coord - min_y) // resolution[1]) + 1
+            col = int((x_coord - min_x) // resolution) + 1
+            row = int((y_coord - min_y) // resolution) + 1
 
             tiles.append({
                 "id": f"{1}-{row}-{col}",
@@ -97,7 +100,8 @@ def generate_patches_from_reference(config: Dict) -> gpd.GeoDataFrame:
     gdf_output = gpd.GeoDataFrame(tiles, crs=profile['crs'], geometry='geometry')
 
     if write_dataframe:
-        gpkg_path = os.path.join(output_path, output_name+'_slicing_job.gpkg')
+        gpkg_path = os.path.join(output_path, output_name + '_slicing_job.gpkg')
+        print('[✓] Saved Sliced Boxes: ', gpkg_path)
         gdf_output.to_file(gpkg_path, driver='GPKG')
 
     return gdf_output
