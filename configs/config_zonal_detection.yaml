@@ -1,8 +1,8 @@
 # ======================
 # I/O
 # ======================
-output_path: 'C:/Users/agari/Desktop/TESTING/FLAIR-HUB-ZONAL'
-output_name: zone_inference_result_AERIAL_ONLY
+output_path: '../results/'
+output_name: TEST
 
 write_dataframe: False
 output_type: argmax  # or class_prob
@@ -11,14 +11,14 @@ cog_conversion: True
 # ======================
 # Model & Inference
 # ======================
-model_weights: G:/FLAIR-HUB-MODELS/FLAIR-HUB_LC-A_IRC/checkpoints/ckpt-epoch=79-val_loss=0.88_FLAIR-HUB_LC-A_IRC.ckpt
+model_weights: ../FLAIR-HUB_LC-A_swin-upernet.safetensors
 use_gpu: True
 batch_size: 1
 num_worker: 0
 
-reference_modality_for_slicing: AERIAL_RGBI
-img_pixels_detection: 512
-margin: 128
+img_pixels_detection: 2048
+margin: 512
+output_px_meters: 0.2
 
 # ======================
 # Model Framework
@@ -42,7 +42,7 @@ modalities:
       SENTINEL1-DESC_TS : False
 
   AERIAL_RGBI:
-      input_img_path: F:/TEST-INFERENCE/ROI_AERIAL.tif
+      input_img_path: ../ROI_AERIAL.tif
       channels: [4, 1, 2]
       normalization:
         type: custom
@@ -76,11 +76,11 @@ modalities:
         stds: [543.11, 312.76, 284.61]
 
   SENTINEL2_TS:
-      input_img_path: F:/TEST-INFERENCE/ROI_SEN2.tif
+      input_img_path: /path/to/input_image.tif
       channels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-      dates_txt: F:/TEST-INFERENCE/dates_sen2.txt
+      dates_txt: /path/to/dates_sen2.txt
       filter_clouds: True
-      filter_clouds_img_path: F:/TEST-INFERENCE/ROI_SEN2-MSK.tif
+      filter_clouds_img_path: /path/to/input_image.tif
       temporal_average: False
 
   SENTINEL1-ASC_TS:
