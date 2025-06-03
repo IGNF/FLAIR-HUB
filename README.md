@@ -117,10 +117,9 @@ pip install -e .
 <br><br>
 
 ### Tasks :mag_right:
+This library comprises two main entry points:
 
-This library comprises two main entry points:<br>
-
-#### :file_folder: flair_inc
+#### :file_folder: flair_hub
 
 The flair module is used for training, inference and metrics calculation at the patch level. To use this pipeline :
 
