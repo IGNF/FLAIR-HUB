@@ -234,26 +234,59 @@ The pipeline is configured using a YAML file (`flair-1-config-detect.yaml`).
 
 ## Baseline results
 
-| AERIAL | AERIAL-RLT | SPOT | ELEV | SENTINEL-2 | SENTINEL-1 ASC | SENTINEL-1 DESC | MODEL | mIoU 
------------- | ------------- | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
-| 
+| Model ID | Aerial VHR | Elevation | SPOT | S2 t.s. | S1 t.s. | Historical | PARA. | O.A. | mIoU |
+|----------|------------|-----------|------|---------|---------|------------|--------|------|------|
+| LC-A     | ✓          |           |      |         |         |            |  89.4  | 77.5 | 64.1 |
+| LC-B     | ✓          | ✓         |      |         |         |            | 181.4  | 78.1 | 65.1 |
+| LC-C     | ✓          | ✓         | ✓    |         |         |            | 270.6  | 78.2 | 65.2 |
+| LC-D     | ✓          |           |      | ✓       |         |            |  93.9  | 77.6 | 64.7 |
+| LC-E     | ✓          |           |      |         | ✓       |            |  95.8  | 77.7 | 64.5 |
+| LC-F     | ✓          |           |      | ✓       | ✓       |            |  97.7  | 77.7 | 64.9 |
+| LC-G     |            |           |      | ✓       |         |            |   0.9  | 57.8 | 34.2 |
+| LC-H     |            |           |      |         | ✓       |            |   1.8  | 54.5 | 28.2 |
+| LC-I     |            |           | ✓    |         |         |            |  89.2  | 64.1 | 43.5 |
+| LC-J     |            | ✓         |      |         |         |            |  89.4  | 67.4 | 51.2 |
+| LC-K     | ✓          |           |      |         |         | ✓          | 181.4  | 77.6 | 64.3 |
+| LC-L     | ✓          | ✓         | ✓    | ✓       | ✓       |            | 276.4  | 78.2 | 65.8 |
+| LC-ALL   | ✓          | ✓         | ✓    | ✓       | ✓       | ✓          | 365.8  | 78.2 | 65.6 |
+| LPIS-A   | ✓          |           |      |         |         |            |  89.4  | 86.6 | 24.4 |
+| LPIS-B   | ✓          |           | ✓    |         |         |            | 181.2  | 87.1 | 26.1 |
+| LPIS-C   | ✓          |           |      | ✓       |         |            |  93.9  | 87.5 | 29.8 |
+| LPIS-D   | ✓          |           |      | ✓       | ✓       |            |  97.7  | 88.0 | 36.1 |
+| LPIS-E   | ✓          |           | ✓    | ✓       |         |            | 183.1  | 87.6 | 30.3 |
+| LPIS-F   |            |           |      | ✓       |         |            |   0.9  | 85.3 | 23.8 |
+| LPIS-G   |            |           |      |         | ✓       |            |   1.8  | 84.5 | 18.1 |
+| LPIS-H   |            |           |      | ✓       | ✓       |            |   2.8  | 84.9 | 23.8 |
+| LPIS-I   |            |           | ✓    | ✓       | ✓       |            |  97.5  | 87.2 | 39.2 |
+| LPIS-J   | ✓          |           | ✓    | ✓       | ✓       |            | 186.9  | 88.0 | 35.4 |
+| LPIS-K   |            |           | ✓    |         |         |            |  89.2  | 84.5 | 15.1 |
+
 
 
 
 
 ## Reference
-Please include a citation to the following article if you use the FLAIR #1 dataset:
+Cite the following article if you use the FLAIR #1 dataset:
 
 ```bibtex
-@article{garioud2022flair1,
+@article{ign2025flairhub,
   doi = {10.13140/RG.2.2.30183.73128/1},
   url = {https://arxiv.org/pdf/2211.12979.pdf},
-  author = {Garioud, Anatol and Peillet, Stéphane and Bookjans, Eva and Giordano, Sébastien and Wattrelos, Boris},
-  title = {FLAIR #1: semantic segmentation and domain adaptation dataset},
+  author = {Garioud, Anatol and Giordano, Sébastien and David, Nicolas and Gonthier, Nicolas},
+  title = {FLAIR-HUB: Large-scale Multimodal Dataset for Land Cover and Crop Mapping},
   publisher = {arXiv},
-  year = {2022}
+  year = {2025}
 }
 ```
+
+```
+Anatol Garioud, Sébastien Giordano, Nicolas David, Nicolas Gonthier. 
+FLAIR-HUB: Large-scale Multimodal Dataset for Land Cover and Crop Mapping. (2025). 
+DOI: https://doi.org/10.13140/RG.2.2.30183.73128/1
+```
+
+
+
 
 ## Acknowledgment
 The experiments conducted in this study were performed using HPC/AI resources provided by GENCI-IDRIS (Grant 2024-A0161013803, 2024-AD011014286R2 and 2025-A0181013803).
