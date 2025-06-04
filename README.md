@@ -82,152 +82,351 @@ flair_cosia =
 ```
 
 
-<br>
-
-
-## Baseline models
-
-
-<br>
-
-## Pre-trained models
-
-<b>Pre-trained models &#9889;&#9889;&#9889;</b>  
-
-<br>
-
-## Lib usage 
-
 <br><br>
 
-### Installation :pushpin:
+## Usage 
 
-```bash
-# it's recommended to install on a conda virtual env
-conda create -n FLAIR_INC -c conda-forge python=3.12.5
-conda activate FLAIR_INC
-git clone git@github.com:IGNF/FLAIR-INC.git
-cd FLAIR_INC*
-pip install -e .
-# if torch.cuda.is_available() returns False, do the following :
-# pip install torch>=2.0.0 --extra-index-url=https://download.pytorch.org/whl/cu117
 
-```
-
-<br><br>
 
 ### Tasks :mag_right:
 This library comprises two main entry points:
 
-#### :file_folder: flair_hub
-
-The flair module is used for training, inference and metrics calculation at the patch level. To use this pipeline :
-
-```bash
-flair_inc --conf=/my/conf/file.yaml
-```
-This will perform the tasks specified in the configuration file. If ‘train’ is enabled, it will train the model and save the trained model to the output folder. If ‘predict’ is enabled, it will load the trained model (or a specified checkpoint if ‘train’ is not enabled) and perform prediction on the test data. If ‘metrics’ is enabled, it will calculate the mean Intersection over Union (mIoU) and other IoU metrics for the predicted and ground truth masks.
-A toy dataset (reduced size) is available to check that your installation and the information in the configuration file are correct.
-Note: A notebook is available in the legacy-torch branch (which uses different libraries versions and structure) that was used during the challenge.
-
-#### :file_folder: flair_inc_zone_detect
-This module aims to infer a pre-trained model at a larger scale than individual patches. It allows overlapping inferences using a margin argument. Specifically, this module expects a single georeferenced TIFF file as input.
-
-```bash
-flair_inc_detect --conf=/my/conf/file-detect.yaml
-```
+#### :file_folder: flair_hub | used to train, infer models, calculate metrics, at the patch level. <br>
+#### :file_folder: flair_zonal_detection | used to infer a pretrained model over larger areas. <br>
 
 <br><br>
 
-### Configuration for flair :page_facing_up:
+### Configuration for flair_hub :page_facing_up:
 
-The pipeline is configured using a YAML file (`flair-1-config.yaml`). The configuration file includes sections for data paths, tasks, model configuration, hyperparameters and computational resources.
+The pipeline takes as input a folder with 4 configuration YAML files. The configuration file includes sections for data paths, tasks, supervision, model configuration, hyperparameters and computational resources.
 
-`out_folder`: The path to the output folder where the results will be saved.<br>
-`out_model_name`: The name of the output model.<br>
-`train_csv`: Path to the CSV file containing paths to image-mask pairs for training.<br>
-`val_csv`: Path to the CSV file containing paths to image-mask pairs for validation.<br>
-`test_csv`: Path to the CSV file containing paths to image-mask pairs for testing.<br>
-`ckpt_model_path`: The path to the checkpoint file of the model. Used if train_tasks/init_weights_only_from_ckpt or resume_training_from_ckpt is True and for prediction if train is disabled.<br>
-`path_metadata_aerial`: The path to the aerial metadata JSON file if used with FLAIR data and `model_provider` is SegmentationModelsPytorch.<br><br>
+#### config_task.yaml : <br>
+```yaml
+paths:
+    out_folder: Directory to store all output results (models, logs, predictions).
+    out_model_name: Name identifier for the saved model.
+    train_csv: CSV files containing paths and labels for training datasets.
+    val_csv: CSV files containing paths and labels for validation datasets.
+    test_csv: CSV files containing paths and labels for test datasets.
+    global_mtd_folder: Path to folder with global metadata required for processing.
+    ckpt_model_path: Path to a pretrained model checkpoint to initialize weights.
+
+tasks:
+    train: Enable or disable training phase.
+    train_tasks:
+        init_weights_only_from_ckpt: Use checkpoint weights for initialization only (no training resume).
+        resume_training_from_ckpt: Resume training from the provided checkpoint.
+    predict: Run model inference on test set.
+    write_files: Save predictions and outputs to disk.
+    georeferencing_output: Apply georeferencing to output files.
+    metrics_only: Compute and report metrics without running training or prediction.
+
+hyperparams:
+    num_epochs: Total number of training epochs.
+    batch_size: Number of samples per training batch.
+    seed: Random seed for reproducibility.
+    learning_rate: Initial learning rate for optimizer.
+    optimizer: Choice of optimizer (adamw, adam, or sgd).
+    optim_weight_decay: Weight decay regularization.
+    optim_betas: Beta coefficients for Adam-based optimizers.
+    scheduler: Learning rate scheduler strategy.
+    warmup_fraction: Warm-up fraction for one_cycle_lr.
+    plateau_patience: Patience for reduce_on_plateau scheduler.
+
+hardware:
+    accelerator: Type of hardware to use (gpu, cpu).
+    num_nodes: Number of nodes for distributed training.
+    gpus_per_node: GPUs used per node.
+    strategy: Distributed training strategy (e.g., auto, ddp).
+    num_workers: Number of data loading workers.
+
+saving:
+    ckpt_save_also_last: Save the final model checkpoint at the end of training.
+    ckpt_weights_only: Save only the model weights (not optimizer or scheduler).
+    ckpt_monitor: Metric used to determine the best checkpoint.
+    ckpt_monitor_mode: Direction to optimize the monitored metric (max or min).
+    ckpt_earlystopping_patience: Epochs to wait for improvement before stopping.
+    cp_csv_and_conf_to_output: Copy configuration and CSV files to output directory.
+    enable_progress_bar: Show training progress bar.
+    progress_rate: Update frequency of progress bar (in steps).
+    ckpt_verbose: Print detailed checkpoint saving information.
+    verbose_config: Print full config details to console.
+```
+
+#### config_modalities.yaml : <br>
+```yaml
+modalities:
+
+    inputs:
+        AERIAL_RGBI       : Enable/disable AERIAL_RGBI modality. [True/False]
+        AERIAL-RLT_PAN    : [True/False]
+        DEM_ELEV          : [True/False]
+        SPOT_RGBI         : [True/False]
+        SENTINEL2_TS      : [True/False].
+        SENTINEL1-ASC_TS  : [True/False]
+        SENTINEL1-DESC_TS : [True/False]
+        
+    inputs_channels:
+        AERIAL_RGBI       : Selected channels for AERIAL_RGBI input. Starts at 1.
+        SPOT_RGBI         : Selected channels for SPOT_RGBI input. Starts at 1.
+        SENTINEL2_TS      : Selected channels for Sentinel-2 time series. Starts at 1.
+        SENTINEL1-ASC_TS  : Selected channels for Sentinel-1 ascending time series. Starts at 1.
+        SENTINEL1-DESC_TS : Selected channels for Sentinel-1 descending time series. Starts at 1.
+
+    aux_loss: 
+        AERIAL_RGBI       : Apply auxiliary loss to AERIAL_RGBI input if mutliple modalities. [True/False]
+        AERIAL-RLT_PAN    : [True/False]
+        DEM_ELEV          : [True/False]
+        SPOT_RGBI         : [True/False]
+        SENTINEL2_TS      : [True/False]
+        SENTINEL1-ASC_TS  : [True/False]
+        SENTINEL1-DESC_TS : [True/False]
+
+    aux_loss_weight: Multiplier for auxiliary loss before combining with main loss. Default 1.
+    modality_dropout: Dropout probability per modality (0 = keep all, 1 = drop all systematically).
+        AERIAL_RGBI       : 0
+        AERIAL-RLT_PAN    : 0
 
 
-`train`: If set to True, the model will be trained.<br>
-`init_weights_only_from_ckpt`: Use if fine-tuning to load weights from the ckpt file and perform training<br>
-`resume_training_from_ckpt`: Use if you want to resume an aborted training or complete a training. This will load the weights, optimizer, scheduler and all relevant hyperparameters from the provided ckpt.<br><br>
-`predict`: If set to True, predictions will be made using the model.<br>
-`metrics`: If set to True, metrics will be calculated.<br>
-`delete_preds`: Remove prediction files after metrics calculation.<br><br>
+    pre_processings: 
+        filter_sentinel2: Enable filtering of Sentinel-2 based on masks.
+        filter_sentinel2_max_cloud : Max acceptable cloud cover in Sentinel-2 [%]. Default 1.
+        filter_sentinel2_max_snow : Max acceptable snow cover in Sentinel-2 [%]. Default 1.
+        filter_sentinel2_max_frac_cover : Max acceptable fractional invalid coverage in Sentinel-2. Default 0.05.
+        temporal_average_sentinel2 : Temporal averaging method for Sentinel-2 (False/monthly/semi-monthly).
+        temporal_average_sentinel1 : Temporal averaging method for Sentinel-1 (False/monthly/semi-monthly).
+        calc_elevation : Enable calculation oF DTM-DSM.
+        calc_elevation_stack_dsm : Stack DSM if elevation calculated.
+        use_augmentation: Enable data augmentation for training. Default False.
 
-`model_provider`: the library providing models, either HuggingFace or SegmentationModelsPytorch.<br>
-`org_model`: to be used if `model_provider` is HuggingFace in the form HFOrganization_Modelname, e.g., "openmmlab/upernet-swin-small".<br>
-`encoder_decoder`: to be used if `model_provider` is SegmentationModelsPytorch in the form encodername_decoder_name, e.g., "resnet34_unet".<br><br>
+    normalization: 
+        norm_type : Normalization strategy (custom, scaling, without).
+        AERIAL_RGBI_means : Mean values used to normalize AERIAL_RGBI input if custom.
+        AERIAL_RGBI_stds  : Std. dev. values used to normalize AERIAL_RGBI input if custom.
+        AERIAL-RLT_PAN_means : Mean values for AERIAL-RLT_PAN input if custom.
+        AERIAL-RLT_PAN_stds  : Std. dev. values for AERIAL-RLT_PAN input if custom.
+        SPOT_RGBI_means : Mean values for SPOT_RGBI input if custom.
+        SPOT_RGBI_stds  : Std. dev. values for SPOT_RGBI input if custom.
+        DEM_ELEV_means : Mean elevation values (DSM, DTM) if custom.
+        DEM_ELEV_stds  : Std. dev. of elevation values (DSM, DTM) if custom.
+```
 
-`use_augmentation`: If set to True, data augmentation will be applied during training.<br>
-`use_metadata`: If set to True, metadata will be used. If other than the FLAIR dataset, see structure to be provided.<br><br>
+#### config_models.yaml : <br>
+```yaml
+models:
 
-`channels`: The channels opened in your input images. Images are opened with rasterio which starts at 1 for the first channel.<br>
-`norm_type`: Normalization to be applied: scaling (linear interpolation in the range [0,1]), custom (center-reduced with provided means and standard deviantions), without.<br>
-`norm_means`: If custom, means for each input band.<br>
-`norm_stds`: If custom standard deviation for each input band.<br><br>
+    monotemp_model:  # Encoder-decoder architecture for single-date (monotemporal) inputs
 
-`seed`: The seed for random number generation to ensure reproducibility.<br>
-`batch_size`: The batch size for training.<br>
-`learning_rate`: The learning rate for training.<br>
-`num_epochs`: The number of epochs for training.<br><br>
+        arch: Encoder-decoder architecture from SMP. Eg, swin_tiny_patch4_window7_224-upernet
+        new_channels_init_mode: Strategy to initialize new input channels if above 3 channels (options: copy_first, copy_second, copy_third, random).
 
-`use_weights`: If set to True, class weights will be used during training.<br>
-`classes`: Dict of semantic classes with value in images as key and list [weight, classname] as value. See config file for an example.<br>
+    multitemp_model:  # Architecture for handling multi-temporal (time series) inputs
 
-`georeferencing_output`: If set to True, the output will be georeferenced.<br><br>
+        ref_date: Reference date (MM-DD) for temporal position encoding.
+        encoder_widths: Channel sizes at each stage in the encoder; must match decoder.
+        decoder_widths: Channel sizes at each stage in the decoder; must match encoder.
+        out_conv: Output convolutional layer configuration [intermediate_channels, num_classes].
+        str_conv_k: Kernel size for structured convolutions.
+        str_conv_s: Stride for structured convolutions.
+        str_conv_p: Padding for structured convolutions.
+        agg_mode: Aggregation method for temporal features (e.g., att_group).
+        encoder_norm: Normalization type used in the encoder (e.g., group).
+        n_head: Number of attention heads in the model.
+        d_model: Dimensionality of the model features.
+        d_k: Key dimensionality for attention mechanism.
+        pad_value: Value used for padding missing temporal data.
+        padding_mode: Type of padding used in convolutions (e.g., reflect).
+```
 
-`accelerator`: The type of accelerator to use (‘gpu’ or ‘cpu’).<br>
-`num_nodes`: The number of nodes to use for training.<br>
-`gpus_per_node`: The number of GPUs to use per node for training.<br>
-`strategy`: The strategy to use for distributed training (‘auto’,‘ddp’,...).<br>
-`num_workers`: The number of workers to use for data loading.<br><br>
+#### config_supervision.yaml : <br>
+```yaml
+labels: # List of tasks
+  - AERIAL_LABEL-COSIA
+  - ALL_LABEL-LPIS 
 
+labels_configs:
 
-`ckpt_save_also_last`: on top of best epoch will also save last epoch ckpt file in the same folder.<br>
-`ckpt_verbose`: print whenever a ckpt file is saved.<br>
-`ckpt_weights_only`: save only weights of model in ckpt for storage optimization. This prevents `resume_training_from_ckpt`.<br>
-`ckpt_monitor`: metric to be monitored for saving ckpt files. By default val_loss.<br>
-`ckpt_monitor_mode`: wether min or max of `ckpt_monitor` for saving a ckpt file.<br>
-`ckpt_earlystopping_patience`: ending training if no improvement after defined number of epochs. Default is 30.<br><br>
+    AERIAL_LABEL-COSIA:  
+        task_weight: Weight assigned to this task during multi-task training. Default 1.
+        value_name: Mapping of class indices to semantic category names.
+            0  : 'building'
+            1  : 'greenhouse'
+            2  : 'swimming_pool'
+            3  : 'impervious surface'
+            4  : 'pervious surface'
+            5  : 'bare soil'
+            6  : 'water'
+            7  : 'snow'
+            8  : 'herbaceous vegetation'
+            9  : 'agricultural land'
+            10 : 'plowed land'
+            11 : 'vineyard'
+            12 : 'deciduous'
+            13 : 'coniferous'
+            14 : 'brushwood'
+            15 : 'clear cut'
+            16 : 'ligneous'
+            17 : 'mixed'
+            18 : 'undefined'
+        value_weights:
+            default: Default weight for all classes (used in loss calculation). Default 1.
+            default_exceptions: Specific class indices assigned 0 weight (ignored).
+                15: 0
+                16: 0
+                17: 0
+                18: 0
+            per_modality_exceptions: Placeholder for setting modality-specific class weights.
+                AERIAL_RGBI:
+                  18: 0
 
-`cp_csv_and_conf_to_output`: Makes a copy of paths csv and config file to the output directory.<br>
-`enable_progress_bar`: If set to True, a progress bar will be displayed during training and inference.<br>
-`progress_rate`: The rate at which progress will be displayed.<br>
-
+    ALL_LABEL-LPIS:  
+        task_weight: Weight assigned to this task during multi-task training.
+        label_channel_nomenclature: Index of the label channel used.
+        value_name: Mapping of class indices to crop type names.
+        value_weights:
+            default: Default class weight for the entire label set.
+            default_exceptions: No exception weights defined (can be added).
+            per_modality_exceptions: Placeholder for modality-specific class weight overrides.
+```
 <br><br>
 
-### Configuration for zone_detect :page_facing_up:
 
-The pipeline is configured using a YAML file (`flair-1-config-detect.yaml`).
+### Configuration for flair_zonal_detection :page_facing_up:
 
-`output_path`: path to output result.<br>
-`output_name`: name of resulting raster.<br><br>
+#### config_zonal_detection.yaml : <br>
+```yaml
+# ======================
+# I/O
+# ======================
+output_path: Path to store output results.
+output_name: Identifier name for the output files.
 
-`input_img_path` : path to georeferenced raster.<br>
-`bands` : bands to be used in your raster file.<br><br>
+write_dataframe: Whether to write slicing geometries of input area. [True/False]
+output_type: Format of the output predictions (argmax or class_prob).
+cog_conversion: Convert outputs to Cloud-Optimized GeoTIFF format. [True/False]
 
-`img_pixels_detection` : size in pixels of infered patches, default is 512.<br>
-`margin` : margin between patchs for overlapping detection. 128 by exemple means that every 128*resolution step, a patch center will be computed.<br>
-`output_type` : type of output, can be "class_prob" for integer between 0 and 255 representing the output of the model or "argmax" which will output only one band with the index of the class.<br>
-`n_classes` : number of classes.<br><br>
+# ======================
+# Model & Inference
+# ======================
+model_weights: Path to pretrained model weights for inference. [.safetensors / .ckpt / .pth]
+use_gpu: Whether to use GPU for inference.
+batch_size: Number of samples per inference batch.
+num_worker: Number of data loading workers during inference.
 
-`model_weights` : path to your model weights or checkpoint.<br>
-`batch_size` : size of batch in dataloader, default is 2.<br> 
-`use_gpu` : boolean, rather use gpu or cpu for inference, default is true.<br>
-`model_name` : name of the model in pytorch segmentation models, default is 'unet'.<br>
-`encoder_name` :  Name of the encoder from pytorch segmentation model, default is 'resnet34'.<br>
-`num_worker` : number of worker used by dataloader, value should not be set at a higher value than 2 for linux because paved detection can have concurrency issues compared with traditional detection and set to 0 for mac and windows (gdal implementation's problem).<br><br>
+img_pixels_detection: Size of input image chunks in pixels.
+margin: Overlap margin (in pixels) between tiles.
+output_px_meters: Output resolution in meters per pixel.
 
-`write_dataframe` : wether to write the dataframe of raster slicing to a file.<br><br>
+# ======================
+# Model Framework
+# ======================
+monotemp_arch: SMP Architecture used for monotemporal inference. Eg., swin_base_patch4_window12_384-upernet
+multitemp_model_ref_date: Reference date (MM-DD) for aligning multi-temporal inputs.
 
-`norm_type`: Normalization to be applied: scaling (linear interpolation in the range [0,1]) or custom (center-reduced with provided means and standard deviantions).<br>
-`norm_means`: If custom, means for each input band.<br>
-`norm_stds`: If custom standard deviation for each input band.<br><br>
+# ======================
+# Modalities (inputs used for inference)
+# ======================
+modalities:
+
+  inputs:
+      AERIAL_RGBI       : Enable AERIAL_RGBI input. [True / False]
+      AERIAL-RLT_PAN    : [True / False]
+      DEM_ELEV          : [True / False]
+      SPOT_RGBI         : [True / False]
+      SENTINEL2_TS      : [True / False]
+      SENTINEL1-ASC_TS  : [True / False]
+      SENTINEL1-DESC_TS : [True / False]
+
+  AERIAL_RGBI:
+      input_img_path: Path to AERIAL_RGBI input image.
+      channels: Channels used from the input image. Starts at 1.
+      normalization:
+        type: Normalization method (e.g., custom).
+        means: Per-channel mean for normalization.
+        stds: Per-channel standard deviation for normalization.
+
+  AERIAL-RLT_PAN:
+      input_img_path: Path to AERIAL-RLT_PAN input.
+      channels: Channels used.
+      normalization:
+        type: Normalization method.
+        means: Mean value.
+        stds: Standard deviation.
+
+  DEM_ELEV:
+      input_img_path: Path to DEM input.
+      channels: Channels used.
+      normalization:
+        type: Normalization method.
+        means: Per-channel mean.
+        stds: Per-channel standard deviation.
+      calc_elevation: Whether to compute elevation from DSM/DTM.
+      calc_elevation_stack_dsm: Stack derived DSM with the input.
+
+  SPOT_RGBI:
+      input_img_path: Path to SPOT imagery input.
+      channels: Channels used.
+      normalization:
+        type: Normalization method.
+        means: Per-channel mean.
+        stds: Per-channel standard deviation.
+
+  SENTINEL2_TS:
+      input_img_path: Path to Sentinel-2 time series input.
+      channels: Channels used.
+      dates_txt: Path to text file listing image dates.
+      filter_clouds: Enable cloud filtering.
+      filter_clouds_img_path: Path to Sentinel-2 cloud mask.
+      temporal_average: Whether to average the time series over time.
+
+  SENTINEL1-ASC_TS:
+      input_img_path: Path to Sentinel-1 ascending orbit input.
+      channels: Channels used.
+      dates_txt: Path to date list (optional).
+      temporal_average: Whether to average over time.
+
+  SENTINEL1-DESC_TS:
+      input_img_path: Path to Sentinel-1 descending orbit input.
+      channels: Channels used.
+      dates_txt: Path to date list (optional).
+      temporal_average: Whether to average over time.
+
+# ======================
+# Tasks
+# ======================
+tasks:
+
+  - name: AERIAL_LABEL-COSIA  # Semantic segmentation label task (land cover classes)
+    active: Whether to activate this label set during inference. [True / False]
+    class_names: Mapping of class indices to category names.
+      0: building
+      1: greenhouse
+      2: swimming_pool
+      3: impervious surface
+      4: pervious surface
+      5: bare soil
+      6: water
+      7: snow
+      8: herbaceous vegetation
+      9: agricultural land
+      10: plowed land
+      11: vineyard
+      12: deciduous
+      13: coniferous
+      14: brushwood
+      15: clear cut
+      16: ligneous
+      17: mixed
+      18: undefined
+
+  - name: ALL_LABEL-LPIS  # Crop type classification label task
+    active: Whether to activate this label set during inference. [True / False]
+    class_names: Mapping of class indices to crop categories.
+```
+
+
+
+
 
 <br><br>
 
