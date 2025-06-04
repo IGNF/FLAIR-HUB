@@ -94,8 +94,6 @@ This library comprises two main entry points:
 #### :file_folder: flair_hub | used to train, infer models, calculate metrics, at the patch level. <br>
 #### :file_folder: flair_zonal_detection | used to infer a pretrained model over larger areas. <br>
 
-<br><br>
-
 ### Configuration for flair_hub :page_facing_up:
 
 The pipeline takes as input a folder with 4 configuration YAML files. The configuration file includes sections for data paths, tasks, supervision, model configuration, hyperparameters and computational resources.
