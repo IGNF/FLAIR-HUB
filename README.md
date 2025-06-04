@@ -27,9 +27,9 @@ Participate in obtaining more accurate maps for a more comprehensive description
   
 - **Datapaper :** 
 
-- **Dataset links :** 
+- **Dataset links :**  [FLAIR-HUB dataset](https://huggingface.co/datasets/IGNF/FLAIR-HUB) 
 
-- **Pre-trained models :** 
+- **Pre-trained models :** [FLAIR-HUB pretrained models](https://huggingface.co/collections/IGNF/flair-models-684035e78bd5bff99199ff87) 
 
 </div>
 
