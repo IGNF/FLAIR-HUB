@@ -14,7 +14,7 @@ Participate in obtaining more accurate maps for a more comprehensive description
 
 
 
-![Alt bandeau FLAIR-HUB](images/flair_bandeau.jpg?raw=true)
+![Alt bandeau FLAIR-HUB](imgs/flair_bandeau.jpg?raw=true)
 
 </div>
 
