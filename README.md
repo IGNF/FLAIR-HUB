@@ -10,7 +10,7 @@
 
 
 
-Participate in obtaining more accurate maps for a more comprehensive description and a better understanding of our environment! Come push the limits of state-of-the-art semantic segmentation approaches on a large and challenging dataset. Get in touch at :email: flair@ign.fr
+Participate in obtaining more accurate maps for a more comprehensive description and a better understanding of our environment! Come push the limits of state-of-the-art semantic segmentation approaches on a large and challenging dataset. <br> Get in touch at :email: flair@ign.fr
 
 
 
@@ -32,54 +32,63 @@ Participate in obtaining more accurate maps for a more comprehensive description
 - **Pre-trained models :** [FLAIR-HUB pretrained models](https://huggingface.co/collections/IGNF/flair-models-684035e78bd5bff99199ff87) 
 
 </div>
+<hr>
+
 
 
 ## Context & Data
 
-<br>
+```yaml
+flair_LC = 
+0    : 'building'                'bâtiment'                   '#db0e9a'
+1    : 'greenhouse'              'serre'                      '#9999ff'
+2    : 'swimming_pool'           'piscine'                    '#3de6eb' 
+3    : 'impervious surface'      'zone imperméable'           '#f80c00' 
+4    : 'pervious surface'        'zone perméable'             '#938e7b' 
+5    : 'bare soil'               'sol nu'                     '#a97101' 
+6    : 'water'                   'eau'                        '#1553ae' 
+7    : 'snow'                    'neige'                      '#ffffff' 
+8    : 'herbaceous vegetation'   'surface herbacée'           '#55ff00' 
+9    : 'agricultural land'       'culture'                    '#fff30d' 
+10   : 'plowed land'             'terre labourée'             '#e4df7c' 
+11   : 'vineyard'                'vigne'                      '#660082' 
+12   : 'deciduous'               'feuillu'                    '#46e483' 
+13   : 'coniferous'              'conifère'                   '#194a26' 
+14   : 'brushwood'               'broussaille'                '#f3a60d' 
+15   : 'clear cut'               'coupe'                      '#8ab3a0' 
+16   : 'ligneous'                'ligneux'                    '#c5dc42' 
+17   : 'mixed'                   'mixte'                      '#6b714f'
+18   : 'undefined'               'indéterminé'                '#000000'
 
-<!--
-<figure>
-  <img
-  src="images/flair-1_spatiotemporal.png"
-  alt="ortho image and train/test geographical repartition">
-  <figcaption>ORTHO HR® aerial image cover of France (left), train and test spatial domains of the dataset (middle) and acquisition months defining temporal domains (right).</figcaption>
-</figure>
-
-
-<br>
-<br>
-
-<p align="center">
-  <img width="70%" src="images/flair-1_patches.png">
-  <br>
-  <em>Example of input data (first three columns) and corresponding supervision masks (last column).</em>
-</p>
--->
+flair_LPIS = 
+0    : 'Grasses'                 'Herbe prédominante'         '#92d050' 
+1    : 'Wheat'                   'Blé'                        '#d7e600' 
+2    : 'Barley'                  'Orge'                       '#e0e000' 
+3    : 'Maize'                   'Maïs'                       '#fff100'  
+4    : 'Other cereals'           'Autres céréales'            '#ffff00' 
+5    : 'Rice'                    'Riz'                        '#e8e8e8'
+6    : 'Hemp/Flax/Tobacco'       'Lin/Chanvre/Tabac'          '#dceaf7' 
+7    : 'Sunflower'               'Tournesol'                  '#d29ead' 
+8    : 'Rapeseed'                'Colza'                      '#d29ed0' 
+9    : 'Other oilseed crops'     'Autres oléagineux'          '#ffbe99' 
+10   : 'Soy'                     'Soja'                       '#ffc000' 
+11   : 'Other protein crops'     'Autres protéagineux'        '#ff9000' 
+12   : 'Fodder legumes'          'Légumineuse fourragères'    '#009999' 
+13   : 'Beetroots'               'Betterave'                  '#808000' 
+14   : 'Potatoes'                'Pomme de terre'             '#a7a700' 
+15   : 'Other arable crops'      'Autres arables'             '#89896d' 
+16   : 'Vineyard'                'Vigne'                      '#f2cfee' 
+17   : 'Olive groves'            'Oliveraie'                  '#6f6633' 
+18   : 'Fruit orchards'          'Verger fruits'              '#ac8141' 
+19   : 'Nut orchards'            'Verger noix'                '#996633' 
+20   : 'Other permanent crops'   'Autres pérenne'             '#80c1d7' 
+21   : 'Mixed crops'             'Mélange'                    '#000000' 
+22   : 'Background'              'Autres'                     '#000000'
 
 ```
-flair_cosia = 
- 
-0  :   'building'                'bâtiment'            '#db0e9a'
-1  :   'greenhouse'              'serre'               '#9999ff'
-2  :   'swimming_pool'           'piscine'             '#3de6eb' 
-3  :   'impervious surface'      'zone imperméable'    '#f80c00' 
-4  :   'pervious surface'        'zone perméable'      '#938e7b' 
-5  :   'bare soil'               'sol nu'              '#a97101' 
-6  :   'water'                   'eau'                 '#1553ae' 
-7  :   'snow'                    'neige'               '#ffffff' 
-8  :   'herbaceous vegetation'   'surface herbacée'    '#55ff00' 
-9  :   'agricultural land'       'culture'             '#fff30d' 
-10 :   'plowed land'             'terre labourée'      '#e4df7c' 
-11 :   'vineyard'                'vigne'               '#660082' 
-12 :   'deciduous'               'feuillu'             '#46e483' 
-13 :   'coniferous'              'conifère'            '#194a26' 
-14 :   'brushwood'               'broussaille'         '#f3a60d' 
-15 :   'clear cut'               'coupe'               '#8ab3a0' 
-16 :   'ligneous'                'ligneux'             '#c5dc42' 
-17 :   'mixed'                   'mixte'               '#6b714f'
-18 :   'undefined'               'indéterminé'         '#000000' 
-```
+
+
+
 
 
 <br><br>
