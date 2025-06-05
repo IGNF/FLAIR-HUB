@@ -23,85 +23,50 @@ Participate in obtaining more accurate maps for a more comprehensive description
 <h2 style="margin-top:5px;">:mag_right:Quicklinks</h2>
 
 
-- **Entry page :**  [FLAIR-HUB dataset page](https://ignf.github.io/FLAIR/flairhub) <br>
+- **Entry page :**  [Overall FLAIR-HUB page](https://ignf.github.io/FLAIR/flairhub) <br>
   
 - **Datapaper :** 
 
-- **Dataset links :**  [FLAIR-HUB dataset](https://huggingface.co/datasets/IGNF/FLAIR-HUB) 
+- **Dataset links :**  [Dataset link](https://huggingface.co/datasets/IGNF/FLAIR-HUB) 
 
-- **Pre-trained models :** [FLAIR-HUB pretrained models](https://huggingface.co/collections/IGNF/flair-models-684035e78bd5bff99199ff87) 
+- **Pre-trained models :** [Pretrained models](https://huggingface.co/collections/IGNF/flair-models-684035e78bd5bff99199ff87) 
 
 </div>
 <hr>
 
+## Context and data 
 
+This repository is built on top of the FLAIR-HUB dataset, the largest multi-sensor land cover dataset with very-high-resolution (20\:cm) annotations, covering 2528\:km² of France. It combines six aligned modalities: aerial imagery, Sentinel-1/2 time series, SPOT imagery, topographic data, and historical aerial images. Extensive benchmarks evaluate multimodal fusion and deep learning models (CNNs, transformers) for land cover or crop mapping and also explore multi-task learning. Key figures of the dataset are : <br>
 
-## Context & Data
+<center>
+<table style="width:95%;max-width:600px;">
 
-```yaml
-flair_LC = 
-0    : 'building'                'bâtiment'                   '#db0e9a'
-1    : 'greenhouse'              'serre'                      '#9999ff'
-2    : 'swimming_pool'           'piscine'                    '#3de6eb' 
-3    : 'impervious surface'      'zone imperméable'           '#f80c00' 
-4    : 'pervious surface'        'zone perméable'             '#938e7b' 
-5    : 'bare soil'               'sol nu'                     '#a97101' 
-6    : 'water'                   'eau'                        '#1553ae' 
-7    : 'snow'                    'neige'                      '#ffffff' 
-8    : 'herbaceous vegetation'   'surface herbacée'           '#55ff00' 
-9    : 'agricultural land'       'culture'                    '#fff30d' 
-10   : 'plowed land'             'terre labourée'             '#e4df7c' 
-11   : 'vineyard'                'vigne'                      '#660082' 
-12   : 'deciduous'               'feuillu'                    '#46e483' 
-13   : 'coniferous'              'conifère'                   '#194a26' 
-14   : 'brushwood'               'broussaille'                '#f3a60d' 
-15   : 'clear cut'               'coupe'                      '#8ab3a0' 
-16   : 'ligneous'                'ligneux'                    '#c5dc42' 
-17   : 'mixed'                   'mixte'                      '#6b714f'
-18   : 'undefined'               'indéterminé'                '#000000'
-
-flair_LPIS = 
-0    : 'Grasses'                 'Herbe prédominante'         '#92d050' 
-1    : 'Wheat'                   'Blé'                        '#d7e600' 
-2    : 'Barley'                  'Orge'                       '#e0e000' 
-3    : 'Maize'                   'Maïs'                       '#fff100'  
-4    : 'Other cereals'           'Autres céréales'            '#ffff00' 
-5    : 'Rice'                    'Riz'                        '#e8e8e8'
-6    : 'Hemp/Flax/Tobacco'       'Lin/Chanvre/Tabac'          '#dceaf7' 
-7    : 'Sunflower'               'Tournesol'                  '#d29ead' 
-8    : 'Rapeseed'                'Colza'                      '#d29ed0' 
-9    : 'Other oilseed crops'     'Autres oléagineux'          '#ffbe99' 
-10   : 'Soy'                     'Soja'                       '#ffc000' 
-11   : 'Other protein crops'     'Autres protéagineux'        '#ff9000' 
-12   : 'Fodder legumes'          'Légumineuse fourragères'    '#009999' 
-13   : 'Beetroots'               'Betterave'                  '#808000' 
-14   : 'Potatoes'                'Pomme de terre'             '#a7a700' 
-15   : 'Other arable crops'      'Autres arables'             '#89896d' 
-16   : 'Vineyard'                'Vigne'                      '#f2cfee' 
-17   : 'Olive groves'            'Oliveraie'                  '#6f6633' 
-18   : 'Fruit orchards'          'Verger fruits'              '#ac8141' 
-19   : 'Nut orchards'            'Verger noix'                '#996633' 
-20   : 'Other permanent crops'   'Autres pérenne'             '#80c1d7' 
-21   : 'Mixed crops'             'Mélange'                    '#000000' 
-22   : 'Background'              'Autres'                     '#000000'
-
-```
+  <tbody>
+    <tr><td>🗺️</td><td>ROI / Area Covered</td><td style="text-align: center">2,822 ROIs / 2,528 km²</td></tr>
+    <tr><td>🏛️</td><td>Departments (France)</td><td style="text-align: center">74</td></tr>
+    <tr><td>🧩</td><td>AI Patches (512×512 px)</td><td style="text-align: center">241,100</td></tr>
+    <tr><td>🖼️</td><td>Annotated Pixels</td><td style="text-align: center">63.2 billion</td></tr>
+    <tr><td>🛰️</td><td>Sentinel-2 Acquisitions</td><td style="text-align: center">256,221</td></tr>
+    <tr><td>📡</td><td>Sentinel-1 Acquisitions</td><td style="text-align: center">532,696</td></tr>
+    <tr><td>📁</td><td>Total Files</td><td style="text-align: center">~2.5 million</td></tr>
+    <tr><td>💾</td><td>Total Dataset Size</td><td style="text-align: center">~750 GB</td></tr>
+  </tbody>
+</table>
+</center>
 
 
 
-
-
-<br><br>
 
 ## Usage 
 
-
-
 ### Tasks :mag_right:
-This library comprises two main entry points:
+This library has two entry points:
 
-#### :file_folder: flair_hub | used to train, infer models, calculate metrics, at the patch level. <br>
-#### :file_folder: flair_zonal_detection | used to infer a pretrained model over larger areas. <br>
+#### :file_folder: flair_hub --> used to train, infer models, calculate metrics, at the patch level. <br>
+
+
+
+#### :file_folder: flair_zonal_detection --> used to infer a pretrained model over larger areas. <br>
 
 ### Configuration for flair_hub :page_facing_up:
 
@@ -467,6 +432,60 @@ tasks:
 | LPIS-I   |            |           | ✓    | ✓       | ✓       |            |  97.5  | 87.2 | 39.2 |
 | LPIS-J   | ✓          |           | ✓    | ✓       | ✓       |            | 186.9  | 88.0 | 35.4 |
 | LPIS-K   |            |           | ✓    |         |         |            |  89.2  | 84.5 | 15.1 |
+
+
+
+
+## Inference classes and colors
+
+```yaml
+flair_LC = 
+0    : 'building'                'bâtiment'                   '#db0e9a'
+1    : 'greenhouse'              'serre'                      '#9999ff'
+2    : 'swimming_pool'           'piscine'                    '#3de6eb' 
+3    : 'impervious surface'      'zone imperméable'           '#f80c00' 
+4    : 'pervious surface'        'zone perméable'             '#938e7b' 
+5    : 'bare soil'               'sol nu'                     '#a97101' 
+6    : 'water'                   'eau'                        '#1553ae' 
+7    : 'snow'                    'neige'                      '#ffffff' 
+8    : 'herbaceous vegetation'   'surface herbacée'           '#55ff00' 
+9    : 'agricultural land'       'culture'                    '#fff30d' 
+10   : 'plowed land'             'terre labourée'             '#e4df7c' 
+11   : 'vineyard'                'vigne'                      '#660082' 
+12   : 'deciduous'               'feuillu'                    '#46e483' 
+13   : 'coniferous'              'conifère'                   '#194a26' 
+14   : 'brushwood'               'broussaille'                '#f3a60d' 
+15   : 'clear cut'               'coupe'                      '#8ab3a0' 
+16   : 'ligneous'                'ligneux'                    '#c5dc42' 
+17   : 'mixed'                   'mixte'                      '#6b714f'
+18   : 'undefined'               'indéterminé'                '#000000'
+
+flair_LPIS = 
+0    : 'Grasses'                 'Herbe prédominante'         '#92d050' 
+1    : 'Wheat'                   'Blé'                        '#d7e600' 
+2    : 'Barley'                  'Orge'                       '#e0e000' 
+3    : 'Maize'                   'Maïs'                       '#fff100'  
+4    : 'Other cereals'           'Autres céréales'            '#ffff00' 
+5    : 'Rice'                    'Riz'                        '#e8e8e8'
+6    : 'Hemp/Flax/Tobacco'       'Lin/Chanvre/Tabac'          '#dceaf7' 
+7    : 'Sunflower'               'Tournesol'                  '#d29ead' 
+8    : 'Rapeseed'                'Colza'                      '#d29ed0' 
+9    : 'Other oilseed crops'     'Autres oléagineux'          '#ffbe99' 
+10   : 'Soy'                     'Soja'                       '#ffc000' 
+11   : 'Other protein crops'     'Autres protéagineux'        '#ff9000' 
+12   : 'Fodder legumes'          'Légumineuse fourragères'    '#009999' 
+13   : 'Beetroots'               'Betterave'                  '#808000' 
+14   : 'Potatoes'                'Pomme de terre'             '#a7a700' 
+15   : 'Other arable crops'      'Autres arables'             '#89896d' 
+16   : 'Vineyard'                'Vigne'                      '#f2cfee' 
+17   : 'Olive groves'            'Oliveraie'                  '#6f6633' 
+18   : 'Fruit orchards'          'Verger fruits'              '#ac8141' 
+19   : 'Nut orchards'            'Verger noix'                '#996633' 
+20   : 'Other permanent crops'   'Autres pérenne'             '#80c1d7' 
+21   : 'Mixed crops'             'Mélange'                    '#000000' 
+22   : 'Background'              'Autres'                     '#000000'
+
+```
 
 
 
