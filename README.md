@@ -29,7 +29,9 @@ Participate in obtaining more accurate maps for a more comprehensive description
 
 - **Dataset links :**  [Dataset link](https://huggingface.co/datasets/IGNF/FLAIR-HUB) 
 
-- **Pre-trained models :** [Pretrained models](https://huggingface.co/collections/IGNF/flair-models-684035e78bd5bff99199ff87) 
+- **Pre-trained models :** [Pretrained models](https://huggingface.co/collections/IGNF/flair-models-684035e78bd5bff99199ff87)
+
+- **Toy Datatset direct downlaod** [Dataset link](https://storage.gra.cloud.ovh.net/v1/AUTH_366279ce616242ebb14161b7991a8461/defi-ia/flair_hub/FLAIR-HUB_TOY_DATASET.zip)
 
 </div>
 <hr>
