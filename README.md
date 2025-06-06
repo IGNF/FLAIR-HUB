@@ -36,7 +36,7 @@ Participate in obtaining more accurate maps for a more comprehensive description
 
 ## Context and data 
 
-This repository is built on top of the FLAIR-HUB dataset, the largest multi-sensor land cover dataset with very-high-resolution (20\:cm) annotations, covering 2528\:km² of France. It combines six aligned modalities: aerial imagery, Sentinel-1/2 time series, SPOT imagery, topographic data, and historical aerial images. Extensive benchmarks evaluate multimodal fusion and deep learning models (CNNs, transformers) for land cover or crop mapping and also explore multi-task learning. Key figures of the dataset are : <br>
+This repository is built on top of the **FLAIR-HUB** dataset, the largest multi-sensor land cover dataset with very-high-resolution (20\:cm) annotations, covering 2528\:km² of France. It combines six aligned modalities: aerial imagery, Sentinel-1/2 time series, SPOT imagery, topographic data, and historical aerial images. Extensive benchmarks evaluate multimodal fusion and deep learning models (CNNs, transformers) for land cover or crop mapping and also explore multi-task learning. Key figures of the dataset are : <br>
 
 <center>
 <table style="width:95%;max-width:600px;">
