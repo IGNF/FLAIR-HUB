@@ -61,14 +61,38 @@ This repository is built on top of the **FLAIR-HUB** dataset, the largest multi-
 
 ## Usage 
 
-### Tasks :mag_right:
-This library has two entry points:
+### Installation 
 
-#### :file_folder: flair_hub --> used to train, infer models, calculate metrics, at the patch level. <br>
+1. Conda env
+```
+$ conda create -n FLAIRHUB python>=3.10 
+```
+
+2. Force torch with GPU support
+```
+$ conda activate FLAIRHUB
+$ pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --extra-index-url https://download.pytorch.org/whl/cu126
+```
+3. Install flair-hub 
+```
+$ pip install -e . 
+```
 
 
+### ENtry points :mag_right:
 
-#### :file_folder: flair_zonal_detection --> used to infer a pretrained model over larger areas. <br>
+flair-hub has two entry points:
+
+#### :file_folder: flairhub --> used to train, infer models, calculate metrics, at the patch level. <br>
+```
+$ flairhub --config /path/configs/train/
+```
+
+#### :file_folder: flairhub_zonal --> used to infer a pretrained model over larger areas. <br>
+```
+$ flairhub_zonal --config /path/configs/config_zonal_detection.yaml
+```
+
 
 ### Configuration for flair_hub :page_facing_up:
 
