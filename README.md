@@ -59,9 +59,7 @@ This repository is built on top of the **FLAIR-HUB** dataset, the largest multi-
 <hr>
 <br><br>
 
-## Usage 
-
-### Installation 
+## Installation 
 
 1. Conda env
 ```
@@ -81,7 +79,7 @@ $ pip install -e .
 <hr>
 <br><br>
 
-### Entry points :mag_right:
+## Entry points :mag_right:
 
 flair-hub has two entry points:
 
@@ -95,12 +93,13 @@ $ flairhub --config /path/configs/train/
 $ flairhub_zonal --config /path/configs/config_zonal_detection.yaml
 ```
 
+
 <hr>
 <br><br>
 
-### Configuration for flair_hub :page_facing_up:
+## Configuration for flair-hub :page_facing_up:
 
-The pipeline takes as input a folder with 4 configuration YAML files. The configuration file includes sections for data paths, tasks, supervision, model configuration, hyperparameters and computational resources.
+The pipeline takes as input a folder with 4 configuration YAML files or a single YAML file contaning all arguments. The configuration file includes sections for data paths, tasks, supervision, model configuration, hyperparameters and computational resources.
 
 #### config_task.yaml : <br>
 ```yaml
@@ -188,7 +187,6 @@ modalities:
     modality_dropout: Dropout probability per modality (0 = keep all, 1 = drop all systematically).
         AERIAL_RGBI       : 0
         AERIAL-RLT_PAN    : 0
-
 
     pre_processings: 
         filter_sentinel2: Enable filtering of Sentinel-2 based on masks.
