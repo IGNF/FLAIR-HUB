@@ -83,12 +83,12 @@ $ pip install -e .
 
 flair-hub has two entry points:
 
-#### :file_folder: flairhub --> used to train, infer models, calculate metrics, at the patch level. <br>
+#### :file_folder: src/flair_hub --> used to train, infer models, calculate metrics, at the patch level. <br>
 ```
 $ flairhub --config /path/configs/train/
 ```
 
-#### :file_folder: flairhub_zonal --> used to infer a pretrained model over larger areas. <br>
+#### :file_folder: src/flair_zonal_detection --> used to infer a pretrained model over larger areas. <br>
 ```
 $ flairhub_zonal --config /path/configs/config_zonal_detection.yaml
 ```
