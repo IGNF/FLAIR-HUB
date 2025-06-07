@@ -56,8 +56,8 @@ This repository is built on top of the **FLAIR-HUB** dataset, the largest multi-
 </table>
 </center>
 
-
-
+<hr>
+<br><br>
 
 ## Usage 
 
@@ -78,8 +78,10 @@ $ pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --extra-index-u
 $ pip install -e . 
 ```
 
+<hr>
+<br><br>
 
-### ENtry points :mag_right:
+### Entry points :mag_right:
 
 flair-hub has two entry points:
 
@@ -93,6 +95,8 @@ $ flairhub --config /path/configs/train/
 $ flairhub_zonal --config /path/configs/config_zonal_detection.yaml
 ```
 
+<hr>
+<br><br>
 
 ### Configuration for flair_hub :page_facing_up:
 
@@ -424,7 +428,7 @@ tasks:
 
 
 
-
+<hr>
 
 <br><br>
 
