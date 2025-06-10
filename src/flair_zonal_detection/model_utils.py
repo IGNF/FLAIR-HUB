@@ -2,7 +2,7 @@ import rasterio
 from copy import deepcopy
 from typing import Dict, Any
 
-from flair_hub.models.flair_model import FLAIR_INC_Model
+from flair_hub.models.flair_model import FLAIR_HUB_Model
 from flair_hub.models.checkpoint import load_checkpoint
 
 
@@ -107,11 +107,11 @@ def prepare_model_config(config: Dict[str, Any]) -> Dict[str, Any]:
     return cfg
 
 
-def build_inference_model(config: Dict[str, Any], patch_sizes: Dict[str, int]) -> FLAIR_INC_Model:
+def build_inference_model(config: Dict[str, Any], patch_sizes: Dict[str, int]) -> FLAIR_HUB_Model:
     """
     Build and load the FLAIR inference model from configuration and checkpoint.
     """
     model_cfg = prepare_model_config(config)
-    model = FLAIR_INC_Model(config=model_cfg, img_input_sizes=patch_sizes)
+    model = FLAIR_HUB_Model(config=model_cfg, img_input_sizes=patch_sizes)
     load_checkpoint(model_cfg, model)
     return model.eval()
