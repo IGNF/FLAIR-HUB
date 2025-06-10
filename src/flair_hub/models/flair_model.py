@@ -12,9 +12,9 @@ from flair_hub.models.multitemp_model import UTAE
 
 
 
-class FLAIR_INC_Model(nn.Module):
+class FLAIR_HUB_Model(nn.Module):
     """
-    FLAIR_INC_Model is a multi-modal deep learning model for satellite image processing.
+    FLAIR_HUB_Model is a multi-modal deep learning model for satellite image processing.
     This model processes both mono-temporal and multi-temporal modalities using different encoders, 
     fuses their representations, and applies specific decoders for multiple segmentation tasks.
 
