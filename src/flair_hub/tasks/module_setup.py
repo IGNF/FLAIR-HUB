@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from typing import Optional, Dict, Any
 
-from flair_hub.models.flair_model import FLAIR_INC_Model
+from flair_hub.models.flair_model import FLAIR_HUB_Model
 from flair_hub.data.datamodule import FlairDataModule
 from flair_hub.tasks.tasks_module import SegmentationTask
 
@@ -61,7 +61,7 @@ def build_segmentation_module(
     """
     assert stage in ['train', 'predict'], "stage must be either 'train' or 'predict'"
 
-    model = FLAIR_INC_Model(config, in_img_sizes)
+    model = FLAIR_HUB_Model(config, in_img_sizes)
 
     if stage == 'train':
         flair_losses = FLAIRLosses(config)
