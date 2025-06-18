@@ -2,7 +2,7 @@ models:
 
     monotemp_model: 
 
-        arch: 'swin_tiny_patch4_window7_224-upernet' 
+        arch: 'swin_base_patch4_window12_384-upernet' 
         new_channels_init_mode: 'random' # [copy_first / copy_second / copy_third / random]
 
     multitemp_model: 
