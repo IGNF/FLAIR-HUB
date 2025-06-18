@@ -1,5 +1,6 @@
 labels: 
   - AERIAL_LABEL-COSIA
+  # - ALL_LABEL-LPIS
 
 labels_configs:
     AERIAL_LABEL-COSIA:
