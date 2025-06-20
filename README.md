@@ -23,7 +23,7 @@ Participate in obtaining more accurate maps for a more comprehensive description
 <h2 style="margin-top:5px;">:mag_right:Quicklinks</h2>
 
 
-- **Entry page :**  [Overall FLAIR-HUB page](https://ignf.github.io/FLAIR/flairhub) <br>
+- **Entry page :**  [Overall FLAIR-HUB page](https://ignf.github.io/FLAIR/FLAIR-HUB/flairhub.html) <br>
   
 - **Datapaper :** [arXiv Preprint](https://arxiv.org/abs/2506.07080) 
 
