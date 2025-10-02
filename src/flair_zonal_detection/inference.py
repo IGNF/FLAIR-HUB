@@ -168,6 +168,7 @@ def init_outputs(config: Dict, ref_img: DatasetReader) -> Tuple[Dict[str, Datase
                 "dtype": "uint8",
                 "compress": "lzw"
             })
+            profile.pop('photometric', None)
         else:
             # Adjust height, width and transform based on new resolution
             out_height = int(round((image_bounds['top'] - image_bounds['bottom']) / out_res))
@@ -360,4 +361,5 @@ def run_inference(config_path: str) -> None:
         print("-" * 60)
     finally:
         sys.stdout = sys.__stdout__
+
         sys.stderr = sys.__stderr__
