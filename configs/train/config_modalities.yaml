@@ -11,7 +11,7 @@ modalities:
         
     inputs_channels: # starts at 1
         AERIAL_RGBI       : [4,1,2] 
-        SPOT_RGBI         : [1,2,3]
+        SPOT_RGBI         : [4,1,2]
         SENTINEL2_TS      : [1,2,3,4,5,6,7,8,9,10]
         SENTINEL1-ASC_TS  : [1,2] 
         SENTINEL1-DESC_TS : [1,2]
@@ -63,3 +63,4 @@ modalities:
 
         DEM_ELEV_means : [311.06, 311.06] # use same for both DSM/DTM to allow keeping differences of elevation
         DEM_ELEV_stds  : [537.55, 537.55] # use same for both DSM/DTM to allow keeping differences of elevation
+
