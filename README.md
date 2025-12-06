@@ -518,6 +518,24 @@ flair_LPIS =
 
 
 
+## 🔎 Filter dataset with the FLAIR-HUB Dataset Browser
+
+A small desktop GUI to browse and download subsets 
+of the IGNF/FLAIR-HUB dataset from Hugging Face with filters for: Domain, Year, Modality or Data type.
+
+Requirements: 
+
+- Python 3.9+
+- Tkinter (usually included; on Linux you may need: sudo apt-get install python3-tk)
+- Python packages: pip install `huggingface_hub`
+
+Run:
+1. Get the `flair-hub-HF-dl.py` file.
+2. In a terminal: ```pip install huggingface_hub```
+3. Launch: ```python flair-hub-HF-dl.py```
+
+<br><br>
+
 
 ## Reference
 Cite the following article if you use the FLAIR #1 dataset:
