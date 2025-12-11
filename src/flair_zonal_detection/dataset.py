@@ -190,8 +190,8 @@ class MultiModalSlicedDataset(Dataset):
                 patch = self._normalize_patch(patch, cfg)
                 tile_data[mod_name] = torch.tensor(np.ascontiguousarray(patch), dtype=torch.float32)
                 tile_data[mod_name + '_RAW'] = torch.tensor(np.ascontiguousarray(raw_patch), dtype=torch.float32)
-                if mod_name == "DEM_ELEV":
-                    print(f"[DEBUG] DEM_ELEV torch tensor contiguous: {tile_data[mod_name].is_contiguous()}, shape: {tile_data[mod_name].shape}")
+                #if mod_name == "DEM_ELEV":
+                #    print(f"[DEBUG] DEM_ELEV torch tensor contiguous: {tile_data[mod_name].is_contiguous()}, shape: {tile_data[mod_name].shape}")
 
 
         tile_data['index'] = torch.tensor([idx], dtype=torch.long)
@@ -209,3 +209,4 @@ class MultiModalSlicedDataset(Dataset):
             reader.close()
         if self.mask_reader:
             self.mask_reader.close()
+
