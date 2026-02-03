@@ -27,7 +27,7 @@ setup(
     packages=find_packages(where='src'),
     python_requires='>=3.11',
     install_requires=[
-        'geopandas==1.0.1',
+        'geopandas==1.1.2',
         'rasterio==1.4.3',
         'omegaconf',
         'jsonargparse',
