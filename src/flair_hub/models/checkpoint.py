@@ -214,6 +214,13 @@ def load_checkpoint(
     state_dict = strip_model_prefix_if_needed(state_dict, seg_module.state_dict(), verbose=False)
 
     model_dict = seg_module.state_dict()
+
+    # Loss weights come from current config
+    for k in list(state_dict.keys()):
+        if "criterion." in k:
+            print(f"→ Skipping checkpoint criterion key: {k}")
+            del state_dict[k]
+
     tasks = conf["labels"]
     matched_tasks = set()
     reinit_tasks = set()
@@ -247,15 +254,6 @@ def load_checkpoint(
             bias_key = key.replace("weight", "bias")
             check_and_reinit_layer(state_dict, model_dict, key, bias_key, n_classes,
                                    matched_tasks, reinit_tasks, task_id, reinit_counter)
-
-    # Criterion weights
-    for task in tasks:
-        crit_key = f"criterion.{task}.weight"
-        if crit_key in state_dict and crit_key in model_dict:
-            if state_dict[crit_key].shape != model_dict[crit_key].shape:
-                print(f"→ Reinitializing criterion weights for {task}")
-                state_dict[crit_key] = model_dict[crit_key].clone()
-                reinit_counter[0] += 1
 
     for k in list(state_dict):
         if k in model_dict and state_dict[k].shape != model_dict[k].shape:
