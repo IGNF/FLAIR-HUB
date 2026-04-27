@@ -169,6 +169,7 @@ def init_outputs(config: Dict, ref_img: DatasetReader) -> Tuple[Dict[str, Datase
                 "compress": "lzw"
             })
             profile.pop('photometric', None)
+            profile.pop("nodata", None)
         else:
             # Adjust height, width and transform based on new resolution
             out_height = int(round((image_bounds['top'] - image_bounds['bottom']) / out_res))
