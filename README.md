@@ -541,20 +541,24 @@ Run:
 Cite the following article if you use the FLAIR #1 dataset:
 
 ```bibtex
-@article{ign2025flairhub,
-  doi = {10.48550/arXiv.2506.07080},
-  url = {https://arxiv.org/abs/2506.07080},
-  author = {Garioud, Anatol and Giordano, Sébastien and David, Nicolas and Gonthier, Nicolas},
-  title = {FLAIR-HUB: Large-scale Multimodal Dataset for Land Cover and Crop Mapping},
-  publisher = {arXiv},
-  year = {2025}
+@article{GARIOUD2026271,
+title = {FLAIR-HUB: Large-scale multimodal dataset for land cover and crop mapping},
+author = {Anatol Garioud and Sébastien Giordano and Nicolas David and Nicolas Gonthier},
+journal = {ISPRS Journal of Photogrammetry and Remote Sensing},
+volume = {237},
+pages = {271-300},
+year = {2026},
+issn = {0924-2716},
+doi = {https://doi.org/10.1016/j.isprsjprs.2026.04.017},
+url = {https://www.sciencedirect.com/science/article/pii/S0924271626001899},
 }
 ```
 
 ```
 Anatol Garioud, Sébastien Giordano, Nicolas David, Nicolas Gonthier. 
-FLAIR-HUB: Large-scale Multimodal Dataset for Land Cover and Crop Mapping. (2025). 
-DOI: https://doi.org/10.48550/arXiv.2506.07080
+FLAIR-HUB: Large-scale Multimodal Dataset for Land Cover and Crop Mapping.
+ISPRS Journal of Photogrammetry and Remote Sensing, Volume 237, 2026.
+DOI: https://doi.org/10.1016/j.isprsjprs.2026.04.017
 ```
 
 
