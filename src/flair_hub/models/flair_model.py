@@ -68,13 +68,13 @@ class FLAIR_HUB_Model(nn.Module):
         # Gather modality channels
         self.channels_dict = {
             mod: (
-                1 if mod in ['AERIAL-RLT_PAN', 'DEM_ELEV']
-                else (len(config['modalities']['inputs_channels'][mod])
-                      if mod in config['modalities']['inputs_channels']
-                      else 0)
+                1 if mod in ["AERIAL-RLT_PAN", "DEM_ELEV"]
+                else len(config["modalities"].get("inputs_channels", {}).get(mod) or [])
             )
-            for mod in config['modalities']['inputs']
+            for mod, enabled in config["modalities"]["inputs"].items()
+            if enabled
         }
+
         
         if config['modalities']['inputs']['DEM_ELEV']:
             self.channels_dict['DEM_ELEV'] = (
