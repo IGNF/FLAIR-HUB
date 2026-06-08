@@ -12,7 +12,7 @@ from flair_hub.utils.config_display import print_recap
 
 
 argParser = argparse.ArgumentParser()
-argParser.add_argument("--config", help="Path to the .yaml config file", required=True)
+argParser.add_argument("--config", "--conf", "--c", help="Path to the .yaml config file", required=True)
 
 
 def main():
