@@ -1,5 +1,3 @@
-# SLURM
-
 paths :   
 
     out_folder: ../results/
