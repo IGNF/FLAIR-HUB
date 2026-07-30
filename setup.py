@@ -40,7 +40,7 @@ setup(
         'pytorch-lightning==2.5.1',
         'segmentation-models-pytorch==0.4.0',
         'tensorboard==2.19.0',
-        'pyarrow==19.0.0',
+        'pyarrow==23.0.1',
         'pyogrio==0.10.0',
         'safetensors==0.5.3'
     ],
