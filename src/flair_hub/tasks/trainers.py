@@ -93,7 +93,6 @@ def train(config: Dict[str, Any], data_module: Any, seg_module: nn.Module, out_d
         print('---------------------------------------------------------------')
         print('------------- RESUMING TRAINING FROM CKPT_PATH ----------------')
         print('---------------------------------------------------------------')
-        checkpoint = torch.load(config['paths']['ckpt_model_path'])
         trainer.fit(seg_module, datamodule=data_module, ckpt_path=config['paths']['ckpt_model_path'])
     else:
         trainer.fit(seg_module, datamodule=data_module)
