@@ -25,7 +25,7 @@ setup(
     ],
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
-    python_requires='>=3.11',
+    python_requires=">=3.11,<3.14",
     install_requires=[
         'geopandas==1.1.2',
         'rasterio==1.4.3',
