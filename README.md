@@ -63,7 +63,7 @@ This repository is built on top of the **FLAIR-HUB** dataset, the largest multi-
 
 1. Conda env
 ```
-$ conda create -n FLAIRHUB python>=3.10 
+$ conda create -n FLAIRHUB python=3.11 pip -y
 ```
 
 2. Force torch with GPU support
