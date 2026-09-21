@@ -25,7 +25,7 @@ Participate in obtaining more accurate maps for a more comprehensive description
 
 - **Entry page :**  [Overall FLAIR-HUB page](https://ignf.github.io/FLAIR/FLAIR-HUB/flairhub.html) <br>
   
-- **Datapaper :** [arXiv Preprint](https://arxiv.org/abs/2506.07080) 
+- **Datapaper :** [ISPRS Journal](https://www.sciencedirect.com/science/article/pii/S0924271626001899) / [arXiv Preprint](https://arxiv.org/abs/2506.07080) 
 
 - **Dataset links :**  [Dataset link](https://huggingface.co/datasets/IGNF/FLAIR-HUB) 
 
