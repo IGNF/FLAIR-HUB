@@ -1,0 +1,41 @@
+model:
+
+  monotemporal:
+
+    encoder:
+      name: swin_large_patch4_window12_384.ms_in22k
+      weights: imagenet # [imagenet, null]
+      drop_path_rate: 0.3 # encoder stochastic depth; applied with decoder.provider=flair_hub, ignored with smp
+
+    decoder:
+      name: upernet     # e.g. [upernet, unet, unetplusplus, deeplabv3plus]
+      provider: flair_hub # [flair_hub has upernet only otherwise smp]
+
+      upernet_flair_hub_params:
+        channels: 768
+        pool_scales: [1, 2, 3, 6]
+        dropout: 0.1
+        norm: sync_batchnorm # [sync_batchnorm, batchnorm, groupnorm]
+        align_corners: false
+
+    auxiliary_head: # mono-temporal auxiliary losses, with either decoder provider
+      channels: 256
+      dropout: 0.1
+      norm: sync_batchnorm # [sync_batchnorm, batchnorm, groupnorm]
+
+  multitemporal:
+
+    ref_date: '05-15'
+    encoder_widths: [64, 64, 64, 128]
+    decoder_widths: [32, 32, 64, 128]
+    head_hidden_channels: [32, 19] # output channel count is derived from active tasks/classes
+    str_conv_k: 3
+    str_conv_s: 1
+    str_conv_p: 1
+    agg_mode: att_group # [att_group, att_mean, mean]
+    encoder_norm: group # [group, batch, instance]
+    n_head: 16
+    d_model: 256
+    d_k: 4
+    pad_value: 0
+    padding_mode: reflect # [zeros, reflect, replicate, circular]

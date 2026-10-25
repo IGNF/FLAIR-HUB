@@ -1,0 +1,103 @@
+data:
+
+  modalities:
+
+    AERIAL_RGBI:
+      enabled: true
+      input_band_order: [4, 2, 1]
+      normalization:
+        type: custom # [custom, scaling, without]
+        # scaling uses explicit scale/offset; aerial default scale is 1/255.
+        mean: [123.675, 116.28, 103.53]  # RVB Imagenet [123.675, 116.28, 103.53] RVB-IR FHUB [105.66, 111.35, 102.18, 106.59]
+        std: [58.395, 57.12, 57.375] # RVB Imagenet [58.395, 57.12, 57.375] RVB-IR FHUB [52.23, 45.62, 44.30, 39.78]
+      auxiliary_loss: {enabled: true, weight: 0.4}
+      dropout_probability: 0.0
+
+    AERIAL-RLT_PAN:
+      enabled: false
+      input_band_order: [1]
+      normalization: {type: custom, mean: [125.92], std: [38.45]}
+      auxiliary_loss: {enabled: false, weight: 0.4}
+      dropout_probability: 0.0
+
+    DEM_ELEV:
+      enabled: false
+      normalization:
+        type: custom
+        mean: [311.06, 311.06]
+        std: [537.55, 537.55]
+      auxiliary_loss: {enabled: false, weight: 0.4}
+      dropout_probability: 0.0
+
+    SPOT_RGBI:
+      enabled: false
+      input_band_order: [4, 1, 2]
+      normalization:
+        type: custom
+        mean: [433.26, 508.75, 467.77]
+        std: [312.76, 284.61, 226.02]
+      auxiliary_loss: {enabled: false, weight: 0.4}
+      dropout_probability: 0.0
+
+    SENTINEL2_TS:
+      enabled: false
+      input_band_order: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      normalization: {type: without}
+      auxiliary_loss: {enabled: false, weight: 0.4}
+      dropout_probability: 0.0
+
+    SENTINEL1-ASC_TS:
+      enabled: false
+      input_band_order: [1, 2]
+      normalization: {type: without}
+      auxiliary_loss: {enabled: false, weight: 0.4}
+      dropout_probability: 0.0
+
+    SENTINEL1-DESC_TS:
+      enabled: false
+      input_band_order: [1, 2]
+      normalization: {type: without}
+      auxiliary_loss: {enabled: false, weight: 0.4}
+      dropout_probability: 0.0
+
+  preprocessing:
+
+    sentinel2:
+      filter_clouds: true
+      maximum_cloud: 1 # [0-100]
+      maximum_snow: 1 # [0-100]
+      maximum_covered_fraction: 0.05
+      temporal_average: false
+    sentinel1:
+      temporal_average: false
+    elevation:
+      derive_elevation: true
+      stack_with_dsm: true
+
+  augmentation:
+
+    enabled: true
+
+    geometry:
+      scale_range: [0.5, 2.0]
+      cropping_reference_task: AERIAL_LABEL-COSIA # labels used to limit class dominance during random cropping
+      category_max_ratio: 0.75
+      horizontal_flip_probability: 0.0
+      vertical_flip_probability: 0.0
+      rotation_probability: 0.5
+      rotation_degrees: [-90.0, 90.0]
+
+    radiometry:
+      AERIAL_RGBI:
+        enabled: true
+        mode: hsv # hsv for 3-channel UInt8; otherwise gain_offset to preserve datarange
+        brightness_delta: 32
+        contrast_range: [0.5, 1.5]
+        saturation_range: [0.5, 1.5]
+        hue_delta: 18
+
+      SPOT_RGBI:
+        enabled: false
+        mode: gain_offset
+        gain_range: [0.9, 1.1]
+        offset_range: [0.0, 0.0]

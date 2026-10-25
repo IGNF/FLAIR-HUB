@@ -1,0 +1,66 @@
+experiment:
+
+  output_folder: ../results/
+  name: test-flair-hub
+
+  train_csv: ../toy/TRAIN_FLAIR-INC_TOY.csv
+  validation_csv: ../toy/VALID_FLAIR-INC_TOY.csv
+  test_csv: ../toy/TEST_FLAIR-INC_TOY.csv
+  metadata_folder: /FLAIR-HUB/GLOBAL_ALL_MTD/
+
+execution:
+  train: true
+  predict: true
+  metrics_only: false
+  write_prediction_files: false
+  georeference_predictions: true
+
+training:
+  duration:
+    unit: steps       # [steps, epochs]
+    total: 90000
+  validation:
+    every: 7000
+
+  batch_size: 2
+  seed: 2058167048
+
+  optimizer:
+    name: adamw       # [adamw, adam, sgd]
+    learning_rate: 0.00006
+    weight_decay: 0.01
+    betas: [0.9, 0.999]
+  scheduler:
+    name: cosine      # [cosine, one_cycle_lr, reduce_on_plateau, cycle_then_plateau, none]
+    warmup_steps: 9000       # cosine, one_cycle_lr, cycle_then_plateau
+    warmup_ratio: 0.000001    # cosine only: initial LR / configured LR
+    minimum_lr_ratio: 0.000001 # cosine only: final LR / configured LR
+    plateau_patience: 10      # reduce_on_plateau, cycle_then_plateau
+
+hardware:
+  accelerator: gpu    # [gpu, cpu, auto]
+  precision: 16-mixed # [16-mixed, 32-true] on V100
+  num_nodes: 1
+  gpus_per_node: 1
+  num_workers: 8
+
+checkpoints:
+  initialize_from: null # [null, /path/to/checkpoint.ckpt, /path/to/weights.safetensors]
+  # reset_task_heads: true  # optional fine-tuning reset when class semantics change
+  resume_from: null     # [null, auto, /path/to/full_checkpoint.ckpt]
+  best:
+    monitor: val_miou
+    mode: max
+    weights_only: false
+    also_save_last: false
+  recovery:
+    enabled: true
+    every_steps: 2000
+    directory: recovery_checkpoints
+  early_stopping: {enabled: false, patience: 20}
+
+logging:
+  progress: true
+  checkpoint_messages: true
+  verbose_config: false
+  copy_input_csv: true

@@ -1,0 +1,20 @@
+training_artifacts:
+  resolved_config: /path/to/run/resolved_config.yaml
+  checkpoint: /path/to/run/checkpoints/best.ckpt
+inputs:
+  AERIAL_RGBI:
+    raster: /path/to/aerial_mosaic.tif
+inference:
+  use_gpu: true
+  precision: auto
+  batch_size: 1
+  num_workers: 0
+  patch_size: 2048
+  margin: 512
+  output_resolution: 0.2
+output:
+  folder: ./results/zonal
+  name: aerial_prediction
+  type: argmax
+  cloud_optimized_geotiff: true
+  write_slicing_grid: false
